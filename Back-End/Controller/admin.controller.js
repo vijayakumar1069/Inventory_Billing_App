@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const signupRouter = async (req, res, next) => {
   const { username, email, password } = req.body;
+  console.log(username, email, password);
   if (!username || !email || !password) {
     return next(errorHandler(401, "Must fill all the values"));
   }
