@@ -22,7 +22,7 @@ const signupRouter = async (req, res, next) => {
     });
     await addnewadmin.save();
     const { password: pass, ...rest } = addnewadmin._doc;
-    res.status(200).json({ rest });
+    res.status(200).json({ rest,message:"Register Successfully...." });
   } catch (error) {
     next(error);
   }
