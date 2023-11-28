@@ -50,11 +50,11 @@ export default function Signup() {
         </h1>
       </div>
       <div className="flex flex-col md:flex-row p-5 gap-5 items-center mt-10  bg-slate-800 rounded-lg">
-        <div className="w-fill md:w-1/2   object-cover  md:border-slate-400 p-3 md:border-r-4">
+        <div className="w-full md:w-1/2    object-cover  md:border-slate-400  md:border-r-4">
           <img
             src="https://images.unsplash.com/photo-1487611459768-bd414656ea10?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvcm18ZW58MHx8MHx8fDA%3D"
             alt="Signup Image"
-            className="max-w-full h-auto"
+            className="max-w-full h-auto  "
           />
         </div>
         <div className="p-1 w-full md:w-1/2 flex gap-1 flex-col">
@@ -80,7 +80,7 @@ export default function Signup() {
               className="p-3 rounded-lg border"
               onChange={handlechange}
             />
-            <button className="bg-blue-500 text-white p-3 rounded-lg border uppercase ">
+            <button className="bg-blue-500 text-white p-3 rounded-lg  uppercase hover:opacity-80 ">
               {loading ? "Registering..." : "resgister"}
             </button>
           </form>
