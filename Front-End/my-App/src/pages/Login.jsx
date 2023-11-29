@@ -6,6 +6,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
   console.log(formdata);
   const handlechange = (e) => {
@@ -27,10 +28,13 @@ export default function Login() {
       const data = await res.json();
       if (data.success === false) {
         console.log(data.message);
+        return setError(data.message);
       }
-      navigate("/");
+      setError(false);
+      navigate("/home");
     } catch (error) {
       console.log(error.message);
+      setError(error.message);
     }
   };
   return (
@@ -71,6 +75,12 @@ export default function Login() {
             <button className="bg-blue-800 p-3 rounded-lg uppercase text-white hover:opacity-80">
               Login
             </button>
+            {error && (
+              <p className="text-center font-semibold text-sm text-red-800">
+                {error}
+              </p>
+            )}
+
             <p>
               if you don't have account{" "}
               <Link to="/">
