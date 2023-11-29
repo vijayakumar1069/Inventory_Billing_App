@@ -22,7 +22,7 @@ const signupRouter = async (req, res, next) => {
     });
     await addnewadmin.save();
     const { password: pass, ...rest } = addnewadmin._doc;
-    res.status(200).json({ rest,message:"Register Successfully...." });
+    res.status(200).json({ rest, message: "Register Successfully...." });
   } catch (error) {
     next(error);
   }
@@ -57,5 +57,32 @@ const loginRouter = async (req, res, next) => {
     next(error);
   }
 };
+const updateRouter = async (req, res, next) => {
+  console.log(req.params.id)
+  try {
+    if (req.user.id != req.params.id) {
 
-module.exports = { signupRouter, loginRouter };
+      return next(404, "you can update your account");
+    }
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(req.body.password);
+    }
+    const updatedetails = await Admin.findByIdAndUpdate(
+      req.user.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+        },
+      },
+      { new: true }
+    );
+    const { password: pass, ...rest } = updatedetails._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signupRouter, loginRouter, updateRouter };

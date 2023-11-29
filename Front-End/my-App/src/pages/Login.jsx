@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import{loginstart} from "../redux/adminSlice.js"
 
 export default function Login() {
   const [formdata, setFormdata] = useState({
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   console.log(formdata);
@@ -21,7 +24,7 @@ export default function Login() {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
-          "content-type": "application/json",
+          "content-Type": "application/json",
         },
         body: JSON.stringify(formdata),
       });
@@ -30,6 +33,8 @@ export default function Login() {
         console.log(data.message);
         return setError(data.message);
       }
+      dispatch(loginstart(data));
+
       setError(false);
       navigate("/home");
     } catch (error) {
