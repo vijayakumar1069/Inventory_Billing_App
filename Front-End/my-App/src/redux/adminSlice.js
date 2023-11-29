@@ -14,7 +14,10 @@ const adminSlice = createSlice({
     updated: (state, action) => {
       state.currentUser = action.payload;
     },
+    logout: (state, action) => {
+      state.currentUser = null;
+    }
   },
 });
-export const { loginstart, updated } = adminSlice.actions;
+export const { loginstart, updated,logout } = adminSlice.actions;
 export default adminSlice.reducer;

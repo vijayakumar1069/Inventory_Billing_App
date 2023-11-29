@@ -58,10 +58,9 @@ const loginRouter = async (req, res, next) => {
   }
 };
 const updateRouter = async (req, res, next) => {
-  console.log(req.params.id)
+  console.log(req.params.id);
   try {
     if (req.user.id != req.params.id) {
-
       return next(404, "you can update your account");
     }
     if (req.body.password) {
@@ -84,5 +83,13 @@ const updateRouter = async (req, res, next) => {
     next(error);
   }
 };
+const logoutRouter = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("logout successfully");
+  } catch (error) {
+    next(error);
+  }
+};
 
-module.exports = { signupRouter, loginRouter, updateRouter };
+module.exports = { signupRouter, loginRouter, updateRouter, logoutRouter };
