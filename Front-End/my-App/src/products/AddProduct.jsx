@@ -3,7 +3,7 @@ import React, { useState } from "react";
 export default function AddProduct() {
   const [formdata, setFormdata] = useState({
     productID: 0,
-    productName: "",
+    productname: "",
     productdescription: "",
     productcategory: "",
     productquantity: 0,
@@ -55,7 +55,7 @@ export default function AddProduct() {
           <input
             type="text"
             placeholder="Product Name"
-            id="productName"
+            id="productname"
             className="p-3 border rounded-lg "
             onChange={handlechange}
           />
