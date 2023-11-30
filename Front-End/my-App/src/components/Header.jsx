@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <div className="bg-gray-700  mt-10 rounded-lg ">
      
-        <ul className="flex items-center justify-between m-10   ">
+        <ul className="flex items-center justify-between    ">
           <Link to="/"><li>
             <h1 className="uppercase text-white text-2xl font-semibold">VIJAY's Inventory</h1>
           </li></Link>

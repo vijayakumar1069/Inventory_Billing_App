@@ -57,14 +57,15 @@ export default function Update() {
         return;
       }
       dispatch(logout());
+      navigate("/")
     } catch (error) {
       console.log(error.message);
     }
   };
   return (
     <div className="">
-      <Header />
-      <div className="flex flex-col items-center max-w-sm sm:max-w-2xl md:max-w-2xl rounded-lg bg-slate-400 mx-auto mt-10 p-5 ">
+     
+      <div className="flex flex-col items-center max-w-20 sm:max-w-2xl md:max-w-2xl rounded-lg bg-slate-400 mx-auto mt-10 p-5 ">
         <h1 className="text-2xl uppercase font-bold text-black">Profile</h1>
         <form
           className="flex flex-col md:w-96  mt-5 gap-5"

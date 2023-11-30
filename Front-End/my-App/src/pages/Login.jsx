@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import{loginstart} from "../redux/adminSlice.js"
+import { loginstart } from "../redux/adminSlice.js";
 
 export default function Login() {
   const [formdata, setFormdata] = useState({
@@ -36,7 +36,7 @@ export default function Login() {
       dispatch(loginstart(data));
 
       setError(false);
-      navigate("/home");
+      navigate("/dashboard");
     } catch (error) {
       console.log(error.message);
       setError(error.message);
