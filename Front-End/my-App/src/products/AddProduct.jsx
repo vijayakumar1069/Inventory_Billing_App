@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function AddProduct() {
+  const { currentUser } = useSelector((state) => state.admin);
   const [formdata, setFormdata] = useState({
     productID: 0,
     productname: "",
@@ -19,7 +21,7 @@ export default function AddProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/products/add", {
+      const res = await fetch(`/api/products/addproduct/${currentUser._id}`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
