@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
       <div className="flex  ">
      
       <div className="bg-white"> <Sidebar /></div>
-      <div className=""><Outlet/></div>
+      <div className="flex-1 flex-wrap"><Outlet/></div>
       </div>
       
      

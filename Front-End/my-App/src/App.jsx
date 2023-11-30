@@ -15,17 +15,14 @@ import PageContent from "./components/PageContent";
 import Sidebar from "./components/Sidebar";
 import { useSelector } from "react-redux";
 
-import Header from "./components/Header";
-import ProductManagement from "./sidebar-pages/Productmanagement";
 import Layout from "./components/Layout";
+import AddProduct from "./products/AddProduct";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
   return (
     <>
       <Router>
-     
-
         <Routes>
           <Route path="/" element={<Signup />}></Route>
           <Route path="/login" element={<Login />}></Route>
@@ -33,7 +30,7 @@ function App() {
             <Route path="/update" element={<Update />}></Route>
           </Route>
           <Route element={<Layout />}>
-            <Route path="/products" element={<ProductManagement />} />
+            <Route path="/products" element={<AddProduct />} />
             <Route path="/dashboard" element={<Dashboard />}></Route>
           </Route>
           {/* <Route
