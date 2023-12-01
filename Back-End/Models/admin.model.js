@@ -16,10 +16,12 @@ const adminSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    products: {
-      type: [mongoose.Schema.Types.ObjectId],
-      default: [],
-    },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PRODUCT",
+      },
+    ],
   },
   {
     timestamps: true,

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ProductTable from "./ProductTable";
 
 export default function AddProduct() {
   const { currentUser } = useSelector((state) => state.admin);
+  const [prevProducts, setPrevProducts] = useState({});
   const [formdata, setFormdata] = useState({
     productID: 0,
     productname: "",
@@ -11,6 +13,20 @@ export default function AddProduct() {
     productquantity: 0,
     productprice: 0,
   });
+  useEffect(() => {
+    const fetching = async () => {
+      try {
+        const res = await ftech(`/api/products/getproducts/${currentUser._id}`);
+        const data = await res.json();
+        if (data.success === false) {
+          console.log(data.message);
+        }
+        setPrevProducts(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+  }, []);
   console.log(formdata);
   const handlechange = (e) => {
     setFormdata({
