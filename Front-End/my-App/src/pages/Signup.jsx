@@ -36,7 +36,7 @@ export default function Signup() {
       setLoading(false);
       setError(false);
 
-      navigate("/home");
+      navigate("/dashboard");
     } catch (error) {
       setError(error);
       setLoading(false);

@@ -13,10 +13,10 @@ const Sidebar = () => {
         <li className="boder border-red-500 bg-white text-center  text-black p-3 rounded-lg hover:bg-red-600">
           <Link to="/products">Product </Link>
         </li>
-        {/* <li>
-          <Link to="/inventory">Inventory Tracking</Link>
+        <li  className="boder border-red-500 bg-white text-center  text-black p-3 rounded-lg hover:bg-red-600">
+          <Link to="/customer">Customers</Link>
         </li>
-        <li>
+         {/*<li>
           <Link to="/invoice">Invoice</Link>
         </li>
         <li>

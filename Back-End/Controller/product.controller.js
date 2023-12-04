@@ -26,7 +26,6 @@ const addProduct = async (req, res, next) => {
     admin.products.push(newproduct._id);
     // admin.update({ $addToSet: { products: newproduct._id } });
 
-
     await admin.save();
     res.status(200).json(newproduct);
   } catch (error) {
@@ -42,10 +41,9 @@ const getProducts = async (req, res, next) => {
     const admin = await ADMIN.findById(req.user.id).populate({
       path: "products",
       options: { sort: { createdAt: -1 } }, // Sort products in descending order based on createdAt
-    })
+    });
     // Access products directly from the populated array
-    const products = admin.products;
-    console.log(products);
+    const products = admin.products||[];
 
     // Respond with the desired data
     res.status(200).json(products);
@@ -54,7 +52,81 @@ const getProducts = async (req, res, next) => {
     next(errorHandler(500, "Internal Server Error"));
   }
 };
+const editProduct = async (req, res, next) => {
+  try {
+    console.log("id:::::", req.params.id);
+    const product = await PRODUCT.findById(req.params.id);
+    if (!product) {
+      return next(errorHandler(404, "Product not found"));
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+const editproductdone = async (req, res, next) => {
+  try {
+    console.log(req.params.id);
+    console.log("res body", req.body);
+    const oldproduct = await PRODUCT.findById({ _id: req.params.id });
 
-module.exports = getProducts;
+    if (!oldproduct) {
+      return next(errorHandler(404, "Product not found"));
+    }
 
-module.exports = { addProduct, getProducts };
+    // Dynamically construct the update object based on the fields in the request body
+    const updateFields = {};
+    if (req.body.productId) updateFields.productId = req.body.productId;
+    if (req.body.productname) updateFields.productname = req.body.productname;
+    if (req.body.productprice)
+      updateFields.productprice = req.body.productprice;
+    if (req.body.productquantity)
+      updateFields.productquantity = req.body.productquantity;
+    if (req.body.productcategory)
+      updateFields.productcategory = req.body.productcategory;
+    if (req.body.productdescription)
+      updateFields.productdescription = req.body.productdescription;
+
+    const updated = await PRODUCT.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true }
+    );
+    console.log("updated", updated);
+
+    res.status(200).json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteProduct = async (req, res, next) => {
+  try {
+    const admin = await ADMIN.findById({ _id: req.user.id });
+    if (!admin) {
+      return next(errorHandler(404, "you can only delete your products"));
+    }
+    const deleteproductfromADMIN = admin.products.filter(
+      (product) => product._id != req.params.id
+    );
+    admin.products = deleteproductfromADMIN;
+    await admin.save();
+
+    const product = await PRODUCT.findByIdAndDelete({ _id: req.params.id });
+    if (!product) {
+      return next(errorHandler(404, "Product not found"));
+    }
+
+    res.status(200).json(" deleted successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  addProduct,
+  getProducts,
+  editProduct,
+  getProducts,
+  editproductdone,
+  deleteProduct,
+};

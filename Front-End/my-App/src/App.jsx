@@ -6,17 +6,14 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Update from "./pages/Update";
 import PrivateRoute from "./components/PrivateRoute";
-import Inventorytracking from "./sidebar-pages/Inventorytracking";
-import Addition from "./sidebar-pages/Addition";
-import SearchingAndFiltering from "./sidebar-pages/SearchingAndFiltering";
-import Notications from "./sidebar-pages/Notications";
-import Invoice from "./sidebar-pages/Invoice";
-import PageContent from "./components/PageContent";
-import Sidebar from "./components/Sidebar";
+
 import { useSelector } from "react-redux";
 
 import Layout from "./components/Layout";
 import AddProduct from "./products/AddProduct";
+import Editproduct from "./products/Editproduct";
+import Customer from "./Customers/Customer";
+import Editcustomer from "./Customers/Editcustomer";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -29,9 +26,12 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/update" element={<Update />}></Route>
           </Route>
+          <Route path="/editproduct/:id" element={<Editproduct />}></Route>
+          <Route path="/editcustomer/:id" element={<Editcustomer />}></Route>
           <Route element={<Layout />}>
             <Route path="/products" element={<AddProduct />} />
             <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/customer" element={<Customer />} />
           </Route>
           {/* <Route
             path="/addition"

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ProductTable from "./ProductTable";
+import { Link } from "react-router-dom";
 
 export default function AddProduct() {
   const { currentUser } = useSelector((state) => state.admin);
-  const [prevProducts, setPrevProducts] = useState({});
+  const [prevProducts, setPrevProducts] = useState([]);
   const [formdata, setFormdata] = useState({
     productID: 0,
     productname: "",
@@ -16,7 +16,7 @@ export default function AddProduct() {
   useEffect(() => {
     const fetching = async () => {
       try {
-        const res = await ftech(`/api/products/getproducts/${currentUser._id}`);
+        const res = await fetch(`/api/products/getproducts/${currentUser._id}`);
         const data = await res.json();
         if (data.success === false) {
           console.log(data.message);
@@ -26,8 +26,10 @@ export default function AddProduct() {
         console.log(error.message);
       }
     };
-  }, []);
-  console.log(formdata);
+    fetching();
+  }, [currentUser._id]);
+  console.log(prevProducts);
+
   const handlechange = (e) => {
     setFormdata({
       ...formdata,
@@ -45,9 +47,27 @@ export default function AddProduct() {
         body: JSON.stringify(formdata),
       });
       const data = await res.json();
+      setPrevProducts([data, ...prevProducts]);
+
       if (data.success === false) {
         return console.log(data.message);
       }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/products/deleteproduct/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.message === false) {
+        console.log(data.message);
+      }
+
+      setPrevProducts(prevProducts.filter((product) => product._id != id));
+      console.log(data);
     } catch (error) {
       console.log(error.message);
     }
@@ -112,6 +132,56 @@ export default function AddProduct() {
           </button>
         </form>
       </div>
+      {prevProducts.length > 0 && (
+        <div className="max-w-5xl mx-auto overflow-x-auto p-3">
+          <table className="table-auto w-full border-collapse border">
+            <thead>
+              <tr className="bg-blue-500 text-white font-semibold">
+                <th className="py-2 px-4 border-r border-b">Id</th>
+                <th className="py-2 px-4 border-r border-b">Name</th>
+                <th className="py-2 px-4 border-r border-b">Category</th>
+                <th className="py-2 px-4 border-r border-b">Quantity</th>
+                <th className="py-2 px-4 border-r border-b">Price</th>
+                <th className="py-2 px-4 border-b">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {prevProducts.map((product) => (
+                <tr
+                  key={product._id}
+                  className="text-center border-b border-black "
+                >
+                  <td className="py-2 px-4 border-r">{product.productID}</td>
+                  <td className="py-2 px-4 border-r">{product.productname}</td>
+                  <td className="py-2 px-4 border-r">{product.productprice}</td>
+                  <td className="py-2 px-4 border-r">
+                    {product.productquantity}
+                  </td>
+                  <td className="py-2 px-4 border-r">
+                    {product.productcategory}
+                  </td>
+                  <td className="py-2 px-4 my-5 ">
+                    <div className="flex flex-col p-3 gap-2 ">
+                      <Link to={`/editproduct/${product._id}`}>
+                        <button className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 ">
+                          Edit
+                        </button>
+                      </Link>
+
+                      <button
+                        className="p-3 border bg-red-500 rounded-lg font-semibold text-white hover:opacity-80"
+                        onClick={() => handleDelete(product._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
