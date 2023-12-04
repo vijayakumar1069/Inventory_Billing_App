@@ -73,11 +73,14 @@ export default function Customer() {
   };
   return (
     <div className="">
-      <div className="max-w-screen-md mx-auto   ">
+      <div className="flex flex-col gap-5 w-sm mx-5 p-3 sm:w-2/3  sm:mx-auto   ">
         <h1 className="text-3xl p-3 font-semibold text-center">
           Customer Details
         </h1>
-        <form className="flex flex-col gap-5  " onSubmit={handlesubmit}>
+        <form
+          className=" flex flex-col gap-5 w-full flex-1 "
+          onSubmit={handlesubmit}
+        >
           <input
             type="number"
             id="customerID"
