@@ -43,7 +43,7 @@ const getProducts = async (req, res, next) => {
       options: { sort: { createdAt: -1 } }, // Sort products in descending order based on createdAt
     });
     // Access products directly from the populated array
-    const products = admin.products||[];
+    const products = admin.products || [];
 
     // Respond with the desired data
     res.status(200).json(products);
@@ -121,6 +121,15 @@ const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+const getProduct = async (req, res, next) => {
+  console.log(req.params.id);
+  const product = await PRODUCT.findOne({ productID: req.params.id });
+  if (!product) {
+    return next(errorHandler(404, "Product not found"));
+  }
+  const{productquantity:quantity,...rest}=product._doc;
+  res.status(200).json(rest);
+};
 
 module.exports = {
   addProduct,
@@ -129,4 +138,5 @@ module.exports = {
   getProducts,
   editproductdone,
   deleteProduct,
+  getProduct,
 };

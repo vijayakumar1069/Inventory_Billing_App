@@ -72,5 +72,20 @@ const deletecustomer = async (req, res, next) => {
   }
   res.status(200).json("deleted successfully........");
 };
+const getcustomer = async (req, res, next) => {
+  const customer = await CUSTOMER.findOne({ customerID: req.params.id });
+  if (!customer) {
+    return next(errorHandler(404, "Customer not Found"));
+  }
 
-module.exports = { addCustomer, getallcustomer, editcustomer, updatecustomer,deletecustomer };
+  res.status(200).json(customer);
+};
+
+module.exports = {
+  addCustomer,
+  getallcustomer,
+  editcustomer,
+  updatecustomer,
+  deletecustomer,
+  getcustomer,
+};
