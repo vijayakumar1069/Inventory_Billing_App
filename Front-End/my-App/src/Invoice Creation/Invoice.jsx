@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 export default function Invoice() {
@@ -7,9 +7,12 @@ export default function Invoice() {
     productname: "",
     productdescription: "",
     productcategory: "",
-    productquantity: 1,
+    productquantity: 0,
     productprice: 0,
   });
+  const [totalprice, setTotalPrice] = useState(0);
+  const [gstfortotalprice, setGstfortotalprice] = useState(0);
+  const [toalamountwithgst, setToalamountwithgst] = useState(0);
   const [currentCustomer, setCurrentCustomer] = useState({
     customerID: 0,
     name: "",
@@ -30,7 +33,7 @@ export default function Invoice() {
         return;
       }
       setError(false);
-      console.log(data)
+      console.log(data);
       setCurrentProduct(data);
     } catch (error) {
       console.log(error);
@@ -61,6 +64,44 @@ export default function Invoice() {
       console.log(error);
     }
   };
+  const hanldeaddmore = () => {
+    setPrevProducts([currentproduct, ...prevProducts]);
+    setCurrentProduct({
+      productID: 0,
+      productname: "",
+      productdescription: "",
+      productcategory: "",
+      productquantity: 1,
+      productprice: 0,
+    });
+  };
+  // Function to calculate total price
+  const calculateTotalPrice = () => {
+    const updatedTotalPrice =
+      currentproduct.productquantity * currentproduct.productprice +
+      prevProducts.reduce(
+        (acc, product) => acc + product.productquantity * product.productprice,
+        0
+      );
+    setTotalPrice(updatedTotalPrice.toFixed(1));
+  };
+
+  // Function to calculate GST amount
+  const calculateGstfortotalprice = () => {
+    setGstfortotalprice((totalprice * (18 / 100)).toFixed(1));
+  };
+
+  // Function to calculate total amount with GST
+  const calculateToalamountwithgst = () => {
+    setToalamountwithgst(
+      (parseFloat(totalprice) + parseFloat(gstfortotalprice)).toFixed(1)
+    );
+  };
+  useEffect(() => {
+    calculateTotalPrice();
+    calculateGstfortotalprice();
+    calculateToalamountwithgst();
+  }, [currentproduct, prevProducts]);
 
   return (
     <div>
@@ -124,15 +165,13 @@ export default function Invoice() {
         </div>
 
         <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32 ">quantity  : </label>
+          <label className="font-semibold w-32 ">quantity : </label>
           <input
-
             onChange={handlechange}
             className="rounded-lg p-3 border w-full  "
             type="number"
             id="productquantity"
             placeholder="Numbere of Quantities "
-            min={1}
             value={currentproduct.productquantity}
           />
         </div>
@@ -148,58 +187,117 @@ export default function Invoice() {
           />
         </div>
 
-        <button className="p-3 bg-blue-800 hover:opacity-80 rounded-lg border uppercase text-white font-semibold">
+        <button
+          type="button"
+          onClick={hanldeaddmore}
+          className="p-3 bg-blue-800 hover:opacity-80 rounded-lg border uppercase text-white font-semibold"
+        >
           Add More Products...
         </button>
+        <div className="flex flex-col gap-4 flex-wrap bg-rose-300">
+          {prevProducts.length > 0 && (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border border-collapse border-black">
+                <thead>
+                  <tr>
+                    <th className="py-2">Product ID</th>
+                    <th className="py-2">Name</th>
+                    <th className="py-2">Category</th>
+                    <th className="py-2">Quantity</th>
+                    <th className="py-2">Price/Product</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {prevProducts.map((product) => (
+                    <tr key={product._id}>
+                      <td className="py-2 text-center">{product.productID}</td>
+                      <td className="py-2  text-center">
+                        {product.productname}
+                      </td>
+                      <td className="py-2 text-center">
+                        {product.productcategory}
+                      </td>
+                      <td className="py-2 text-center">
+                        {product.productquantity}
+                      </td>
+                      <td className="py-2 text-center">
+                        {product.productprice}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex  mt-4 flex-col ">
+                <div className="text-right flex flex-col gap-6 ">
+                  <div className="mb-2 flex justify-between">
+                    <h3 className="font-semibold">Total Amount - </h3>
+                    <p>{totalprice}</p>
+                  </div>
+                  <div className="mb-2 flex justify-between">
+                    <h3 className="font-semibold">GST % -</h3>
+                    <p>{gstfortotalprice}</p>
+                  </div>
+                  <div className="mb-2 flex justify-between">
+                    <h3 className="font-semibold">Amount need to Pay - </h3>
+                    <p>{toalamountwithgst}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <h1 className="text-2xl text-center font-bold my-3 p-2">customer Details</h1>
+      <h1 className="text-2xl text-center font-bold my-3 p-2">
+        customer Details
+      </h1>
       <div className="flex flex-col gap-4 ">
         <div className="flex gap-4 items-center">
-            <label className="font-semibold w-32"> CustomerID : </label>
-            <div className="flex gap-5 items-center">
+          <label className="font-semibold w-32"> CustomerID : </label>
+          <div className="flex gap-5 items-center">
+            <input
+              type="text"
+              id="customerID"
+              className="rounded-lg p-3 border "
+              placeholder="Enter Customer ID"
+              value={currentCustomer.customerID}
+              onChange={handlecustomerchange}
+            />
+            <FaSearch size={25} onClick={handlesearchCustomerID} />
+          </div>
+        </div>
+        <div className="flex gap-5 items-center">
+          <label className="font-semibold w-32">Name : </label>
           <input
             type="text"
-            id="customerID"
+            id="name"
             className="rounded-lg p-3 border "
-            placeholder="Enter Customer ID"
-            value={currentCustomer.customerID}
+            placeholder="Enter Customer name"
+            value={currentCustomer.name}
             onChange={handlecustomerchange}
           />
-          <FaSearch size={25} onClick={handlesearchCustomerID} />
-        </div>
-        </div>
-       <div className="flex gap-5 items-center">
-        <label className="font-semibold w-32">Name : </label>
-        <input
-          type="text"
-          id="name"
-          className="rounded-lg p-3 border "
-          placeholder="Enter Customer name"
-          value={currentCustomer.name}
-          onChange={handlecustomerchange}
-        />
-       </div>
-        <div className="flex gap-5 items-center">
-            <label className="w-32 font-semibold">Email</label>
-            <input
-          type="email"
-          id="email"
-          className="rounded-lg p-3 border "
-          placeholder="Enter Customer email"
-          onChange={handlecustomerchange}
-          value={currentCustomer.email}
-        />
         </div>
         <div className="flex gap-5 items-center">
-            <label className="w-32 font-semibold">Address</label>
-            <input
-          type="text"
-          id="address"
-          className="rounded-lg p-3 border "
-          placeholder="Enter Customer address"
-          onChange={handlecustomerchange}
-          value={currentCustomer.address}
-        />
+          <label className="w-32 font-semibold">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="rounded-lg p-3 border "
+            placeholder="Enter Customer email"
+            onChange={handlecustomerchange}
+            value={currentCustomer.email}
+          />
+        </div>
+        <div className="flex gap-5 items-center">
+          <label className="w-32 font-semibold">Address</label>
+          <input
+            type="text"
+            id="address"
+            className="rounded-lg p-3 border "
+            placeholder="Enter Customer address"
+            onChange={handlecustomerchange}
+            value={currentCustomer.address}
+          />
         </div>
       </div>
       <button className="p-3 border bg-green-700 hover:opacity-75 rounded-lg  ">

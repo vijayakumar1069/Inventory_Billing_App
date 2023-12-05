@@ -122,12 +122,11 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 const getProduct = async (req, res, next) => {
-  console.log(req.params.id);
   const product = await PRODUCT.findOne({ productID: req.params.id });
   if (!product) {
     return next(errorHandler(404, "Product not found"));
   }
-  const{productquantity:quantity,...rest}=product._doc;
+  const { productquantity: quantity, ...rest } = product._doc;
   res.status(200).json(rest);
 };
 
