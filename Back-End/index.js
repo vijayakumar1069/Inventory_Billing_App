@@ -4,8 +4,9 @@ const cors = require("cors");
 const body_parser = require("body-parser");
 const dotenv = require("dotenv").config();
 const adminRoutes = require("./Routes/admin.route.js");
-const productsRoutes=require("./Routes/product.route.js")
-const customerRouter=require("./Routes/customer.route.js");
+const productsRoutes = require("./Routes/product.route.js");
+const customerRouter = require("./Routes/customer.route.js");
+const invoicerouter = require("./Routes/admin.invoice.route.js");
 const cookieparser = require("cookie-parser");
 const app = express();
 app.use(body_parser.json());
@@ -23,7 +24,8 @@ const mondbconnection = mongoose
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productsRoutes);
-app.use("/api/customers",customerRouter)
+app.use("/api/customers", customerRouter);
+app.use("/api/invoices", invoicerouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

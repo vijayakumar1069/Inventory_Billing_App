@@ -111,7 +111,7 @@ export default function Invoice() {
     calculateGstfortotalprice();
     calculateToalamountwithgst();
   }, [currentproduct, prevProducts, totalprice]);
-  const handlesubmit = (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
     if (currentproduct.productID != 0) {
       setPrevProducts([currentproduct, ...prevProducts]);
@@ -124,6 +124,17 @@ export default function Invoice() {
         productprice: 0,
       });
     }
+    try {
+      const res = await fetch("/api/invoices/createInvoice", {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+        },
+        body: JSON.stringify({prevProducts, currentCustomer}),
+      });
+      const data=await res.json()
+      console.log(data);
+    } catch (error) {}
   };
   console.log("prevProducts after submission", prevProducts);
 
@@ -229,6 +240,7 @@ export default function Invoice() {
                     <th className="py-2">Category</th>
                     <th className="py-2">Quantity</th>
                     <th className="py-2">Price/Product</th>
+                    <th className="py-2">Total Price </th>
                   </tr>
                 </thead>
 
@@ -252,6 +264,9 @@ export default function Invoice() {
                           </td>
                           <td className="py-2 text-center">
                             {product.productprice}
+                          </td>
+                          <td className="py-2 text-center">
+                            {product.productprice * product.productquantity}
                           </td>
                         </tr>
                       )
