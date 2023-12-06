@@ -7,9 +7,11 @@ export default function Invoice() {
     productname: "",
     productdescription: "",
     productcategory: "",
-    productquantity: 0,
+    productquantity: 1,
     productprice: 0,
   });
+  const [initialQuantity, setInitialQuantity] = useState(1);
+
   const [totalprice, setTotalPrice] = useState(0);
   const [gstfortotalprice, setGstfortotalprice] = useState(0);
   const [toalamountwithgst, setToalamountwithgst] = useState(0);
@@ -34,7 +36,7 @@ export default function Invoice() {
       }
       setError(false);
       console.log(data);
-      setCurrentProduct(data);
+      setCurrentProduct({ ...data, productquantity: 1 });
     } catch (error) {
       console.log(error);
       setError(error.message);
@@ -65,6 +67,10 @@ export default function Invoice() {
     }
   };
   const hanldeaddmore = () => {
+    if (currentproduct.productID === 0) {
+      return setError("Enter Correct product ID");
+    }
+
     setPrevProducts([currentproduct, ...prevProducts]);
     setCurrentProduct({
       productID: 0,
@@ -83,25 +89,43 @@ export default function Invoice() {
         (acc, product) => acc + product.productquantity * product.productprice,
         0
       );
-    setTotalPrice(updatedTotalPrice.toFixed(1));
+    setTotalPrice(updatedTotalPrice);
   };
 
   // Function to calculate GST amount
   const calculateGstfortotalprice = () => {
-    setGstfortotalprice((totalprice * (18 / 100)).toFixed(1));
+    setGstfortotalprice(totalprice * (18 / 100));
   };
 
   // Function to calculate total amount with GST
   const calculateToalamountwithgst = () => {
-    setToalamountwithgst(
-      (parseFloat(totalprice) + parseFloat(gstfortotalprice)).toFixed(1)
-    );
+    const totalAmountWithGst = totalprice + gstfortotalprice;
+    setToalamountwithgst(totalAmountWithGst);
   };
+
+  console.log("prevProducts", prevProducts);
+  console.log("currentProducts", currentproduct);
   useEffect(() => {
+    currentproduct.productquantity = Number(currentproduct.productquantity);
     calculateTotalPrice();
     calculateGstfortotalprice();
     calculateToalamountwithgst();
-  }, [currentproduct, prevProducts]);
+  }, [currentproduct, prevProducts, totalprice]);
+  const handlesubmit = (e) => {
+    e.preventDefault();
+    if (currentproduct.productID != 0) {
+      setPrevProducts([currentproduct, ...prevProducts]);
+      setCurrentProduct({
+        productID: 0,
+        productname: "",
+        productdescription: "",
+        productcategory: "",
+        productquantity: 1,
+        productprice: 0,
+      });
+    }
+  };
+  console.log("prevProducts after submission", prevProducts);
 
   return (
     <div>
@@ -155,12 +179,11 @@ export default function Invoice() {
           <label className="font-semibold w-32">category :</label>
 
           <input
-            onChange={handlechange}
             className="rounded-lg p-3 border w-full "
             type="text"
             id="productcategory"
-            placeholder="enter product Category"
             value={currentproduct.productcategory}
+            placeholder="enter product Category"
           />
         </div>
 
@@ -171,6 +194,7 @@ export default function Invoice() {
             className="rounded-lg p-3 border w-full  "
             type="number"
             id="productquantity"
+            required
             placeholder="Numbere of Quantities "
             value={currentproduct.productquantity}
           />
@@ -209,23 +233,29 @@ export default function Invoice() {
                 </thead>
 
                 <tbody>
-                  {prevProducts.map((product) => (
-                    <tr key={product._id}>
-                      <td className="py-2 text-center">{product.productID}</td>
-                      <td className="py-2  text-center">
-                        {product.productname}
-                      </td>
-                      <td className="py-2 text-center">
-                        {product.productcategory}
-                      </td>
-                      <td className="py-2 text-center">
-                        {product.productquantity}
-                      </td>
-                      <td className="py-2 text-center">
-                        {product.productprice}
-                      </td>
-                    </tr>
-                  ))}
+                  {prevProducts.map(
+                    (product, index) =>
+                      // Add a condition to check if the product is not empty
+                      product.productID !== 0 && (
+                        <tr key={index}>
+                          <td className="py-2 text-center">
+                            {product.productID}
+                          </td>
+                          <td className="py-2  text-center">
+                            {product.productname}
+                          </td>
+                          <td className="py-2 text-center">
+                            {product.productcategory}
+                          </td>
+                          <td className="py-2 text-center">
+                            {product.productquantity}
+                          </td>
+                          <td className="py-2 text-center">
+                            {product.productprice}
+                          </td>
+                        </tr>
+                      )
+                  )}
                 </tbody>
               </table>
               <div className="flex  mt-4 flex-col ">
@@ -258,7 +288,7 @@ export default function Invoice() {
             <input
               type="text"
               id="customerID"
-              className="rounded-lg p-3 border "
+              className="rounded-lg p-3 border w-full "
               placeholder="Enter Customer ID"
               value={currentCustomer.customerID}
               onChange={handlecustomerchange}
@@ -271,7 +301,7 @@ export default function Invoice() {
           <input
             type="text"
             id="name"
-            className="rounded-lg p-3 border "
+            className="rounded-lg p-3 border w-full "
             placeholder="Enter Customer name"
             value={currentCustomer.name}
             onChange={handlecustomerchange}
@@ -282,7 +312,7 @@ export default function Invoice() {
           <input
             type="email"
             id="email"
-            className="rounded-lg p-3 border "
+            className="rounded-lg p-3 border w-full "
             placeholder="Enter Customer email"
             onChange={handlecustomerchange}
             value={currentCustomer.email}
@@ -293,14 +323,17 @@ export default function Invoice() {
           <input
             type="text"
             id="address"
-            className="rounded-lg p-3 border "
+            className="rounded-lg p-3 border w-full "
             placeholder="Enter Customer address"
             onChange={handlecustomerchange}
             value={currentCustomer.address}
           />
         </div>
       </div>
-      <button className="p-3 border bg-green-700 hover:opacity-75 rounded-lg  ">
+      <button
+        onClick={handlesubmit}
+        className="p-3 border w-full uppercase text-white font-semibold my-4 bg-green-700 hover:opacity-75 rounded-lg  "
+      >
         create Invoice{" "}
       </button>
     </div>
