@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
-const INVOICE=require("../Models/admin.invoice.model.js")
+const INVOICE = require("../Models/admin.invoice.model.js");
 
 async function createInvoice(req, res, next) {
   try {
-    
     let existingInvoice;
     let newInvoiceNumber;
 
@@ -47,7 +46,16 @@ async function createInvoice(req, res, next) {
     next(error);
   }
 }
+const getAllInvoices = async (req, res, next) => {
+  try {
+    const invoices = await INVOICE.find();
+    res.status(200).json(invoices);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createInvoice,
+  getAllInvoices,
 };

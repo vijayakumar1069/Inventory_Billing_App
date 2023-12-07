@@ -15,6 +15,7 @@ import Editproduct from "./products/Editproduct";
 import Customer from "./Customers/Customer";
 import Editcustomer from "./Customers/Editcustomer";
 import Invoice from "./Invoice Creation/Invoice";
+import InvoiceDetails from "./Invoice Details/InvoiceDetails";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -34,6 +35,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/customer" element={<Customer />} />
             <Route path="/invoice" element={<Invoice />} />
+            <Route path="/invoicedetails" element={<InvoiceDetails />} />
           </Route>
           {/* <Route
             path="/addition"
