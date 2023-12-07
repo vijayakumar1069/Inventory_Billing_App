@@ -10,7 +10,10 @@ export default function Invoice() {
     productquantity: 1,
     productprice: 0,
   });
-  const [initialQuantity, setInitialQuantity] = useState(1);
+
+  const [date, setDate] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [totalprice, setTotalPrice] = useState(0);
   const [gstfortotalprice, setGstfortotalprice] = useState(0);
@@ -30,15 +33,15 @@ export default function Invoice() {
       );
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
         setError(data.message);
+
         return;
       }
       setError(false);
+
       console.log(data);
       setCurrentProduct({ ...data, productquantity: 1 });
     } catch (error) {
-      console.log(error);
       setError(error.message);
     }
   };
@@ -62,6 +65,7 @@ export default function Invoice() {
       }
       setError(false);
       setCurrentCustomer(data);
+      console.log("customer", data);
     } catch (error) {
       console.log(error);
     }
@@ -113,6 +117,7 @@ export default function Invoice() {
   }, [currentproduct, prevProducts, totalprice]);
   const handlesubmit = async (e) => {
     e.preventDefault();
+
     if (currentproduct.productID != 0) {
       setPrevProducts([currentproduct, ...prevProducts]);
       setCurrentProduct({
@@ -124,17 +129,36 @@ export default function Invoice() {
         productprice: 0,
       });
     }
+
     try {
+      setLoading(true);
+      const dataforserverside = JSON.stringify({
+        prevProducts,
+        currentCustomer,
+        date,
+      });
       const res = await fetch("/api/invoices/createInvoice", {
         method: "POST",
         headers: {
           "content-Type": "application/json",
         },
-        body: JSON.stringify({prevProducts, currentCustomer}),
+        body: dataforserverside,
       });
-      const data=await res.json()
+      const data = await res.json();
+      if (data.success === false) {
+        setError(data.message);
+        setLoading(false);
+      }
+      setLoading(false);
+      setSuccess("Invoice Created Successfully....");
+      setError(false);
+
       console.log(data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+      setLoading(false);
+    }
   };
   console.log("prevProducts after submission", prevProducts);
 
@@ -323,7 +347,7 @@ export default function Invoice() {
           />
         </div>
         <div className="flex gap-5 items-center">
-          <label className="w-32 font-semibold">Email</label>
+          <label className="w-32 font-semibold">Email : </label>
           <input
             type="email"
             id="email"
@@ -334,7 +358,7 @@ export default function Invoice() {
           />
         </div>
         <div className="flex gap-5 items-center">
-          <label className="w-32 font-semibold">Address</label>
+          <label className="w-32 font-semibold">Address : </label>
           <input
             type="text"
             id="address"
@@ -344,13 +368,32 @@ export default function Invoice() {
             value={currentCustomer.address}
           />
         </div>
+        <div className="flex gap-5 items-center">
+          <label className="font-semibold w-32 ">Due Date : </label>
+          <input
+            type="date"
+            id="date"
+            className="rounded-lg w-full p-3 border "
+            required
+            onChange={(e) => {
+              setDate(e.target.value);
+            }}
+          />
+        </div>
       </div>
       <button
+        disabled={loading}
         onClick={handlesubmit}
         className="p-3 border w-full uppercase text-white font-semibold my-4 bg-green-700 hover:opacity-75 rounded-lg  "
       >
-        create Invoice{" "}
+        {loading ? "CREATING...." : "CREATE INVOICE"}
       </button>
+      {success && (
+        <p className="text-green-700 text-center font-semibold">{success}</p>
+      )}
+      {error && (
+        <p className="text-red-700 text-center font-semibold">{error}</p>
+      )}
     </div>
   );
 }
