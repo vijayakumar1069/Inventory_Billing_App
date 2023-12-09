@@ -39,8 +39,8 @@ export default function Invoice() {
       }
       setError(false);
 
-      console.log(data);
       setCurrentProduct({ ...data, productquantity: 1 });
+      
     } catch (error) {
       setError(error.message);
     }
@@ -75,7 +75,8 @@ export default function Invoice() {
       return setError("Enter Correct product ID");
     }
 
-    setPrevProducts([currentproduct, ...prevProducts]);
+    setPrevProducts((prev) => [currentproduct, ...prev]);
+    // This code will be executed after the state is updated
     setCurrentProduct({
       productID: 0,
       productname: "",
@@ -85,6 +86,7 @@ export default function Invoice() {
       productprice: 0,
     });
   };
+
   // Function to calculate total price
   const calculateTotalPrice = () => {
     const updatedTotalPrice =
@@ -107,19 +109,19 @@ export default function Invoice() {
     setToalamountwithgst(totalAmountWithGst);
   };
 
-  console.log("prevProducts", prevProducts);
-  console.log("currentProducts", currentproduct);
   useEffect(() => {
     currentproduct.productquantity = Number(currentproduct.productquantity);
     calculateTotalPrice();
+    console.log("prev products before sending the server side", prevProducts);
     calculateGstfortotalprice();
     calculateToalamountwithgst();
   }, [currentproduct, prevProducts, totalprice]);
   const handlesubmit = async (e) => {
     e.preventDefault();
 
-    if (currentproduct.productID != 0) {
-      setPrevProducts([currentproduct, ...prevProducts]);
+    if (currentproduct.productID !== 0) {
+      prevProducts.push(currentproduct);
+
       setCurrentProduct({
         productID: 0,
         productname: "",
@@ -128,6 +130,11 @@ export default function Invoice() {
         productquantity: 1,
         productprice: 0,
       });
+    }
+
+    if (prevProducts.length === 0 && currentproduct.productID === 0) {
+      setError("Add at least one product before creating an invoice.");
+      return;
     }
 
     try {
@@ -160,7 +167,6 @@ export default function Invoice() {
       setLoading(false);
     }
   };
-  console.log("prevProducts after submission", prevProducts);
 
   return (
     <div>

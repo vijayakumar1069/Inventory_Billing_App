@@ -5,7 +5,7 @@ export default function InvoiceDetails() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [formdata, setFormData] = useState({
-    invoiceNumber: null,
+    invoiceNumber: "",
     issuedate: "",
     dueDate: "",
     status: "",
@@ -13,23 +13,70 @@ export default function InvoiceDetails() {
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`/api/invoices/getAllInvoices`);
+      const params = new URLSearchParams();
+
+      // Add form data properties to URLSearchParams
+      for (const key in formdata) {
+        if (formdata.hasOwnProperty(key)) {
+          params.append(key, formdata[key]);
+        }
+      }
+
+      // Update the URL with the new parameters
+      window.history.replaceState({}, "", `?${params.toString()}`);
+
+      console.log(params);
+
+      const res = await fetch(
+        `/api/invoices/getallInvoices?${params.toString()}`
+      );
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
         setError(data.message);
       }
-      setInvoices(data);
+
+      setInvoices((prev) => [...prev, ...data]);
     };
     fetching();
   }, []);
   const handlechange = (e) => {
     setFormData({ ...formdata, [e.target.id]: e.target.value });
   };
-  console.log(formdata);
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+
+    // Add form data properties to URLSearchParams
+    for (const key in formdata) {
+      if (formdata.hasOwnProperty(key)) {
+        params.append(key, formdata[key]);
+      }
+    }
+
+    // Update the URL with the new parameters
+    window.history.replaceState({}, "", `?${params.toString()}`);
+
+    console.log(params);
+
+    const res = await fetch(
+      `/api/invoices/getallInvoices?${params.toString()}`
+    );
+    const data = await res.json();
+    console.log(data);
+    if (data.success === false) {
+      setError(data.message);
+    }
+
+    setInvoices(data);
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-xs  sm:max-w-full mx-3">
-      <form className="flex flex-col gap-5 my-5 px-3  p-2 rounded-lg bg-violet-200">
+      <form
+        onSubmit={handlesubmit}
+        className="flex flex-col gap-5 my-5 px-3  p-2 rounded-lg bg-violet-200"
+      >
         <div className=" flex gap-5 ">
           <label className="font-semibold w-32">InvoiceNumber:</label>
           <input
@@ -37,7 +84,7 @@ export default function InvoiceDetails() {
             placeholder="Invoice Number"
             id="invoiceNumber"
             className="border p-3 rounded-lg  w-full"
-             onChange={handlechange}
+            onChange={handlechange}
           />
         </div>
         <div className=" flex gap-5">
@@ -46,13 +93,14 @@ export default function InvoiceDetails() {
             type="date"
             placeholder="Issue date"
             id="issuedate"
-            className="border p-3 rounded-lg w-full" onChange={handlechange}
+            className="border p-3 rounded-lg w-full"
+            onChange={handlechange}
           />
         </div>
         <div className=" flex gap-5">
           <label className="font-semibold w-32">duedate :</label>
           <input
-          onChange={handlechange}
+            onChange={handlechange}
             type="date"
             placeholder="Issue date"
             id="dueDate"
@@ -90,28 +138,30 @@ export default function InvoiceDetails() {
               </thead>
               <tbody>
                 {invoices.map((invoice, i) => (
-                  <tr key={i} className="hover:bg-gray-50 text-center">
+                  <tr key={i} className="hover:bg-gray-200 text-center">
                     <td className="py-2 border-l border-r">
                       {invoice.invoiceNumber}
                     </td>
                     <td className="py-2 border-l border-r">
-                      {invoice.products.map((product, index) => (
-                        <div key={index}>
-                          <p>{product.productname}</p>
-                          <p className="">
-                            Quantity:
-                            <span className="text-xl text-slate-500 ">
-                              {product.productquantity}
-                            </span>
-                          </p>
-                        </div>
-                      ))}
+                      {invoice.products &&
+                        invoice.products.map((product, index) => (
+                          <div key={index}>
+                            <p>{product.productname}</p>
+                            <p className="">
+                              Quantity:
+                              <span className="text-xl text-slate-500">
+                                {product.productquantity}
+                              </span>
+                            </p>
+                          </div>
+                        ))}
                     </td>
                     <td className="py-2 border-l border-r">
-                      <p> {invoice.customer.name}</p>
-                      <p> {invoice.customer.email}</p>
-                      <p> {invoice.customer.address}</p>
+                      <p>{invoice.customer && invoice.customer.name}</p>
+                      <p>{invoice.customer && invoice.customer.email}</p>
+                      <p>{invoice.customer && invoice.customer.address}</p>
                     </td>
+
                     <td className="py-2 border-l border-r">{invoice.status}</td>
                     <td className="py-2 border-l border-r">
                       {invoice.issuedate}

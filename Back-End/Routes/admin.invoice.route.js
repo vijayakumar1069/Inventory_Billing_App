@@ -1,8 +1,8 @@
 const express = require("express");
 const verifyAdmin = require("../Utils/verifyAdmin");
-const { createInvoice, getAllInvoices } = require("../Controller/admin.invoice.controller");
+const { createInvoice,  getallInvoices } = require("../Controller/admin.invoice.controller");
 const router = express.Router();
 router.post("/createInvoice/", verifyAdmin, createInvoice);
-router.get("/getAllInvoices", verifyAdmin, getAllInvoices);
+router.get("/getAllInvoices", verifyAdmin, getallInvoices);
 
 module.exports = router;

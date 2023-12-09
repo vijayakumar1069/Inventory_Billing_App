@@ -14,6 +14,21 @@ const invoiceSchema = new mongoose.Schema(
     dueDate: {
       type: String,
     },
+    // issuedate: {
+    //   type: Date,
+    //   default: Date.now,
+    // },
+    // dueDate: {
+    //   type: Date,
+    // },
+    // issuedate: {
+    //   type: String,
+    //   default: () => new Date().toISOString().split("T")[0],
+    // },
+    // dueDate: {
+    //   type: String,
+    //   default: () => new Date().toISOString().split("T")[0],
+    // },
     products: [
       {
         productname: String,
