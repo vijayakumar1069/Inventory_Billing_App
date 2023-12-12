@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 export default function InvoiceDetails() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function InvoiceDetails() {
       // Update the URL with the new parameters
       window.history.replaceState({}, "", `?${params.toString()}`);
 
-      console.log(params);
+     
 
       const res = await fetch(
         `/api/invoices/getallInvoices?${params.toString()}`
@@ -57,7 +57,7 @@ export default function InvoiceDetails() {
     // Update the URL with the new parameters
     window.history.replaceState({}, "", `?${params.toString()}`);
 
-    console.log(params);
+    
 
     const res = await fetch(
       `/api/invoices/getallInvoices?${params.toString()}`
@@ -171,9 +171,12 @@ export default function InvoiceDetails() {
                     </td>
                     <td className="py-2 border-l border-r">
                       <div className="flex p-2 items-center gap-2 ">
-                        <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                          Update
-                        </button>
+                        <Link to={`/updateinvoice/${invoice._id}`}>
+                          {" "}
+                          <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                            Update
+                          </button>
+                        </Link>
                         <button className="bg-red-500 text-white px-2 py-1 rounded">
                           Delete
                         </button>

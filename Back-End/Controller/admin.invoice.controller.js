@@ -2,11 +2,10 @@ const mongoose = require("mongoose");
 
 const INVOICE = require("../Models/admin.invoice.model.js");
 const { format, parseISO } = require("date-fns");
+const errorHandler = require("../Utils/errorHandler.js");
 
 const createInvoice = async (req, res, next) => {
   try {
-    console.log(req.body.date);
-    console.log(req.body.prevProducts);
     let existingInvoice;
     let newInvoiceNumber;
 
@@ -39,7 +38,7 @@ const createInvoice = async (req, res, next) => {
     // Create new invoice with unique invoice number
     const currentdate = format(new Date(), "yyyy/MM/dd");
     const duedate = format(parseISO(req.body.date), "yyyy/MM/dd");
-    console.log(currentdate);
+
     const newInvoice = new INVOICE({
       invoiceNumber: newInvoiceNumber,
       issuedate: currentdate.toString(),
@@ -58,12 +57,10 @@ const createInvoice = async (req, res, next) => {
 };
 
 const getallInvoices = async (req, res, next) => {
-  console.log(req.query);
   try {
     // Extract filtering parameters from the request query
     const { invoiceNumber, issuedate, dueDate, status } = req.query;
 
-    console.log(invoiceNumber);
     // Build the filter object
     let filter = {};
 
@@ -74,14 +71,13 @@ const getallInvoices = async (req, res, next) => {
     if (issuedate !== "" && issuedate !== undefined) {
       // Parse the date from the client-side format (yy/mm/dd) to server-side format (MM/dd/yyyy)
       const parsedIssuedate = issuedate.split("-").join("/");
-      console.log("hi   --------", parsedIssuedate.toString());
+
       filter.issuedate = { $eq: parsedIssuedate.toString() }; // Use the parsed date for filtering
     }
 
     if (dueDate !== "" && dueDate !== undefined) {
       // Parse the due date using the same logic as issuedate
       const parsedDueDate = dueDate.split("-").join("/");
-      console.log("due date: ", parsedDueDate.toString());
 
       filter.dueDate = { $eq: parsedDueDate.toString() };
     }
@@ -94,14 +90,6 @@ const getallInvoices = async (req, res, next) => {
     const invoices = Object.keys(filter).length
       ? await INVOICE.find(filter)
       : await INVOICE.find();
-    // const invoices = await INVOICE.find({
-    //   ...(invoiceNumber && { invoiceNumber: { $eq: invoiceNumber } }),
-    //   ...(issuedate && { issuedate: { $lte: issuedate } }),
-    //   ...(dueDate && { dueDate: { $lte: dueDate } }),
-    //   ...(status && {
-    //     status: { $in: ["Pending", "Paid", "Shipped", "Delivered"] },
-    //   }),
-    // });
 
     res.status(200).json(invoices);
   } catch (error) {
@@ -109,8 +97,21 @@ const getallInvoices = async (req, res, next) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+const updateinvoice = async (req, res, next) => {
+  try {
+    const invoice = await INVOICE.findOne({ _id: req.params.id });
+    if (invoice) {
+      res.status(200).json({ invoice });
+    } else {
+      next(errorHandler(404, "InvoiceNotFound"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createInvoice,
   getallInvoices,
+  updateinvoice,
 };
