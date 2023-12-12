@@ -200,7 +200,7 @@ export const UpdateInvoice = () => {
             </div>
           </div>
 
-          <div className="flex gap-5 items-center p-2">
+          <div className="flex gap-5 items-center p-2 sm:justify-end sm:relative sm:top-[-100px]">
             <label className="text-lg  font-semibold">Status : </label>
             <select id="status" className=" bg-[#EADBC8]">
               <option value="Pending">Pending</option>
