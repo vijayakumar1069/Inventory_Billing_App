@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { IoAdd } from "react-icons/io5";
 
 export const UpdateInvoice = () => {
   const [previnvoiceDetails, setPrevInvoiceDetails] = useState(null);
   const params = useParams();
   const paramsid = params.id;
   const [errormessage, setErrorMessage] = useState(false);
+  const [successmessage, setSuccessMessage] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
   const [gst, SetGst] = useState(0);
   const [total, setTotalPrice] = useState(0);
+  const [formdata, setFormdata] = useState("");
+  const handlechange = (e) => {
+    setFormdata(e.target.value);
+  };
 
   const calculatesubtoal = () => {
     if (previnvoiceDetails && previnvoiceDetails.products) {
@@ -18,7 +24,7 @@ export const UpdateInvoice = () => {
         (acc, product) => acc + product.productprice * product.productquantity,
         0
       );
-      console.log(subtotal);
+
       setSubtotal(sub);
     }
   };
@@ -31,21 +37,70 @@ export const UpdateInvoice = () => {
   const calculatetoatl = () => {
     setTotalPrice(subtotal + gst);
   };
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        `/api/invoices/updateexistinginvoice/${paramsid}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ formdata }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        setErrorMessage(data.message);
+        return setSuccessMessage(false);
+      }
+      setSuccessMessage("Invoice updated successfully");
+    } catch (error) {
+      setErrorMessage(error.message);
+      setSuccessMessage(false);
+    }
+  };
+  const handledelete = async (delete_id) => {
+    console.log("hii");
+    try {
+      const res = await fetch(
+        `/api/invoices/deleteproductfrominvoice/${paramsid}?delete_id=${delete_id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      setPrevInvoiceDetails((previnvoice) => ({
+        ...previnvoice,
+        invoiceNumber: data.invoiceNumber,
+        products: data.products,
+        customer: data.customer,
+      }));
+      console.log(previnvoiceDetails);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Inside your UpdateInvoice component
   useEffect(() => {
     const fetching = async () => {
       try {
         const res = await fetch(`/api/invoices/updateinvoice/${paramsid}`);
-        console.log("Response status:", res.status);
 
         if (res.ok) {
           const data = await res.json();
-          console.log("Response data:", data);
 
           if (data.invoice) {
             // Set the invoice details in your state
-            setPrevInvoiceDetails(data.invoice);
+            setPrevInvoiceDetails((prevInvoice) => ({
+              ...prevInvoice,
+              invoiceNumber: data.invoice.invoiceNumber,
+              products: data.invoice.products,
+              customer: data.invoice.customer,
+            }));
           } else {
             setErrorMessage("Invoice not found");
           }
@@ -54,7 +109,6 @@ export const UpdateInvoice = () => {
           setErrorMessage("Failed to fetch invoice details");
         }
       } catch (error) {
-        console.error("Fetch error:", error);
         setErrorMessage("Error fetching invoice details");
       }
     };
@@ -65,15 +119,21 @@ export const UpdateInvoice = () => {
     calculategst();
     calculatetoatl();
   }, [previnvoiceDetails, calculatetoatl]);
+  const handleedit = () => {};
+
   console.log(previnvoiceDetails);
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4 text-center p-3">Invoice Products Details</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center p-3">
+        Invoice Products Details
+      </h1>
 
-      {errormessage && <p className="text-red-700">{errormessage}</p>}
-      {previnvoiceDetails && (
-        <form className="bg-white p-4 rounded-md shadow-md w-full sm:w-5/6 mx-auto">
+      {previnvoiceDetails ? (
+        <form
+          onSubmit={handlesubmit}
+          className="bg-white p-4 rounded-md shadow-md w-full sm:w-5/6 mx-auto"
+        >
           <div className="mb-4">
             <label className="text-lg  font-semibold">Invoice Number :</label>
             <input
@@ -89,7 +149,7 @@ export const UpdateInvoice = () => {
             <label className="text-lg  font-semibold">Products :</label>
 
             <table className="w-full  p-2 ">
-              <thead className="bg-[#F7B787] border-l border-r ">
+              <thead className="bg-[#eec8ab] border-l border-r ">
                 <tr>
                   <th className="py-2 text-center border-l border-r-[#706233] border-r font-semibold text-lg  ">
                     Product Name
@@ -109,10 +169,10 @@ export const UpdateInvoice = () => {
                 </tr>
               </thead>
               <tbody>
-                {previnvoiceDetails.products.map((product, index) => (
+                {previnvoiceDetails?.products?.map((product, index) => (
                   <tr
                     key={index}
-                    className="border-t bg-[#F4EAE0] hover:bg-[#B0A695] "
+                    className="border-t bg-[#eceae7] hover:bg-[#B0A695] "
                   >
                     <td className="py-2  font-semibold text-lg  border-l border-r-[#0C356A] border-r   text-[#2B3499] text-center">
                       {product.productname}
@@ -128,11 +188,23 @@ export const UpdateInvoice = () => {
                     </td>
                     <td className="py-2 font-semibold text-lg border-l border-r-[#0C356A] border-r  text-[#2B3499] text-center ">
                       <div className="flex items-center gap-2 sm:gap-5 sm:justify-center ">
-                        <button className="bg-red-500 text-white p-2 rounded ">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handledelete(product._id);
+                          }}
+                          className="bg-red-500 text-white p-2 rounded "
+                        >
                           <FontAwesomeIcon icon={faXmark} />
                         </button>
                         <Link>
-                          <button className="bg-blue-500 text-white p-2 rounded">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleedit(product._id);
+                            }}
+                            className="bg-blue-500 text-white p-2 rounded"
+                          >
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
@@ -143,12 +215,21 @@ export const UpdateInvoice = () => {
               </tbody>
             </table>
 
+            <Link
+              to={`/addproduct/${paramsid}`}
+              className="flex items-center p-3 bg-[#EC8F5E] justify-center font-semibold text-[#060913] mt-5 rounded-lg uppercase"
+            >
+              {" "}
+              <IoAdd size={32} />
+              Product
+            </Link>
+
             <div className="flex flex-col bg-slate-400 mt-7 p-3 rounded-lg ">
               <div className="grid grid-cols-2 gap-6 ">
                 <div className="text-left">
                   <h3 className="w-32">Sub Total</h3>
                 </div>
-                <div  className="text-right">$ {subtotal.toFixed(2)}</div>
+                <div className="text-right">$ {subtotal.toFixed(2)}</div>
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-left">
@@ -202,7 +283,11 @@ export const UpdateInvoice = () => {
 
           <div className="flex gap-5 items-center p-2 sm:justify-end sm:relative sm:top-[-100px]">
             <label className="text-lg  font-semibold">Status : </label>
-            <select id="status" className=" bg-[#EADBC8]">
+            <select
+              id="status"
+              onChange={handlechange}
+              className=" bg-[#EADBC8]"
+            >
               <option value="Pending">Pending</option>
               <option value="Paid">Paid</option>
               <option value="Shpped">Shpped</option>
@@ -213,7 +298,19 @@ export const UpdateInvoice = () => {
           <button className="p-3 border bg-[#001524] text-white uppercase rounded-lg w-full font-semibold hover:bg-[#22668D] ">
             Update
           </button>
+          {errormessage && (
+            <p className="text-center font-semibold text-red-700">
+              {errormessage}
+            </p>
+          )}
+          {successmessage && (
+            <p className="text-center font-semibold text-green-700">
+              {successmessage}
+            </p>
+          )}
         </form>
+      ) : (
+        <p>No products</p>
       )}
     </div>
   );

@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const INVOICE = require("../Models/admin.invoice.model.js");
 const { format, parseISO } = require("date-fns");
 const errorHandler = require("../Utils/errorHandler.js");
+const PRODUCT = require("../Models/admin.products.js");
+const CUSTOMER = require("../Models/admin.customer.js");
 
 const createInvoice = async (req, res, next) => {
   try {
@@ -44,6 +46,7 @@ const createInvoice = async (req, res, next) => {
       issuedate: currentdate.toString(),
       products: req.body.prevProducts,
       customer: req.body.currentCustomer,
+
       status: "Pending",
       dueDate: duedate.toString(), //
     });
@@ -109,9 +112,136 @@ const updateinvoice = async (req, res, next) => {
     next(error);
   }
 };
+const getproductsforexistinginvoice = async (req, res, next) => {
+  try {
+    const invoice = await INVOICE.findOne({ _id: req.params.id });
+    if (!invoice) {
+      return next(errorHandler(404, "InvoiceNotFound"));
+    }
+    res.status(200).json(invoice.products);
+  } catch (error) {
+    next(error);
+  }
+};
+const addproductstoexistinginvoice = async (req, res, next) => {
+  const currentInvoice = await INVOICE.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        products: req.body.prevProducts,
+      },
+    },
+    { new: true }
+  );
+  res.status(200).json(currentInvoice);
+};
+const updateexistinginvoice = async (req, res, next) => {
+  try {
+    const invoice = await INVOICE.findOne({ _id: req.params.id });
+
+    if (!invoice) {
+      return next(errorHandler(404, "Invoice not found"));
+    }
+
+    const updateproductsincustomer = await CUSTOMER.findOne({
+      email: invoice.customer.email,
+    });
+    if (!updateproductsincustomer) {
+      return next(errorHandler(404, "Customer not found"));
+    }
+    if (req.body.formdata === "Paid") {
+      console.log("hii");
+      invoice.status = "Paid";
+      await invoice.save();
+
+      // Use a for...of loop to ensure synchronous execution
+      for (const product of invoice.products) {
+        try {
+          // Find the product in the database
+          const existingProduct = await PRODUCT.findById(product._id);
+          if (!existingProduct) {
+            return next(
+              errorHandler(404, `Product ${product.productname} is Not Found`)
+            );
+          }
+
+          // Check if the product quantity in the database is greater than or equal to the invoice quantity
+          if (existingProduct.productquantity < product.productquantity) {
+            return next(
+              errorHandler(
+                404,
+                `Insuffient qunation for product ${existingProduct.productname}`
+              )
+            );
+          }
+
+          // Check if the product quantity in the database is 0
+          if (existingProduct.productquantity === 0) {
+            return next(
+              errorHandler(
+                404,
+                `Product ${existingProduct.productname} is out of stock`
+              )
+            );
+          }
+
+          // Update the product quantity in the database
+          const updatedProduct = await PRODUCT.findByIdAndUpdate(
+            product._id,
+            {
+              $inc: { productquantity: -product.productquantity },
+            },
+            { new: true }
+          );
+          updateproductsincustomer.previouslyOrderedProducts.push(product._id);
+          updateproductsincustomer.save();
+        } catch (error) {
+          // Handle errors if necessary
+          console.error(`Error updating product quantity: ${error.message}`);
+        }
+      }
+    }
+
+    res.status(200).json("success");
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteproductfrominvoice = async (req, res, json) => {
+  const invoice = await INVOICE.findById(req.params.id);
+  try {
+    if (!invoice) {
+      next(errorHandler(404, "invoice not found"));
+    }
+    const productIDtoDelete = req.query.delete_id;
+    const deleteproduct = invoice.products.find(
+      (product) => product._id == productIDtoDelete
+    );
+    if (!deleteproduct) {
+      next(errorHandler(404, "product not found"));
+    }
+    //increase the qunatity in poduct collections
+    const updateproduct = await PRODUCT.findByIdAndUpdate(
+      deleteproduct._id,
+      {
+        $inc: { productquantity: deleteproduct.productquantity },
+      },
+      { new: true }
+    );
+    invoice.products.pull({ _id: deleteproduct._id });
+    invoice.save();
+    res.status(200).json(invoice);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createInvoice,
   getallInvoices,
   updateinvoice,
+  getproductsforexistinginvoice,
+  addproductstoexistinginvoice,
+  updateexistinginvoice,
+  deleteproductfrominvoice,
 };
