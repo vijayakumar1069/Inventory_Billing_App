@@ -24,6 +24,7 @@ const addProduct = async (req, res, next) => {
       productcategory: req.body.productcategory,
       productquantity: req.body.productquantity,
       productprice: req.body.productprice,
+      initailquantity: req.body.initailquantity,
     });
     await newproduct.save();
 
@@ -134,7 +135,8 @@ const getProduct = async (req, res, next) => {
   if (!product) {
     return next(errorHandler(404, "Product not found"));
   }
-  if (product.productquantity == 0) {
+
+  if (product.productquantity == 0 || product.productquantity < 0) {
     return next(errorHandler(404, "Out of Stock"));
   }
   const { productquantity: quantity, ...rest } = product._doc;

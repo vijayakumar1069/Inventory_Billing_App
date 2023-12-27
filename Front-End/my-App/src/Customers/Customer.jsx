@@ -88,6 +88,12 @@ export default function Customer() {
             className="border p-3 rounded-lg"
             onChange={handlechange}
           />
+            {error && (
+            <p className="text-sm font-semibold  text-center text-red-600 uppercase">
+              {error}
+            </p>
+          )}
+
           <input
             type="text"
             id="name"
@@ -115,11 +121,7 @@ export default function Customer() {
           >
             {loading ? "ADDING" : "ADD CUSTOMER"}
           </button>
-          {error && (
-            <p className="text-sm font-semibold p-3 text-center text-red-600">
-              {error}
-            </p>
-          )}
+        
         </form>
       </div>
       {customer.length > 0 ? (

@@ -40,6 +40,15 @@ const createInvoice = async (req, res, next) => {
     // Create new invoice with unique invoice number
     const currentdate = format(new Date(), "yyyy/MM/dd");
     const duedate = format(parseISO(req.body.date), "yyyy/MM/dd");
+    for (const product of req.body.prevProducts) {
+      const quantitycheck = await PRODUCT.findOne({ _id: product._id });
+      console.log(product.productquantity)
+      if (quantitycheck.productquantity < product.productquantity) {
+        return next(
+          errorHandler(404, "Product qunatity  is lesser the your required quantity")
+        );
+      }
+    }
 
     const newInvoice = new INVOICE({
       invoiceNumber: newInvoiceNumber,
@@ -287,7 +296,7 @@ const deleteinvoice = async (req, res, next) => {
     await Promise.all(
       deleteinvoice.products.map(async (product) => {
         // Increment product quantity for each product in the invoice
-        await PRODUCT.findByIdAndUpdate(
+        const updatedProduct = await PRODUCT.findByIdAndUpdate(
           product._id,
           {
             $inc: {
@@ -296,6 +305,11 @@ const deleteinvoice = async (req, res, next) => {
           },
           { new: true }
         );
+
+        // Check if the product was updated successfully
+        if (!updatedProduct) {
+          throw new Error("Failed to update product quantity");
+        }
       })
     );
 
@@ -306,6 +320,7 @@ const deleteinvoice = async (req, res, next) => {
     if (!productsdeletefromcustomer) {
       return next(errorHandler(404, "Customer Not Found"));
     }
+
     const updatedPreviouslyOrderedProducts =
       productsdeletefromcustomer.previouslyOrderedProducts.filter(
         (prevproductofcustomer) =>
@@ -328,15 +343,16 @@ const deleteinvoice = async (req, res, next) => {
     await productsdeletefromcustomer.save();
 
     // Delete the invoice
-    const updatedinvoice = await INVOICE.findByIdAndDelete(deleteid);
+    const deletedInvoice = await INVOICE.findByIdAndDelete(deleteid);
 
-    if (updatedinvoice) {
+    if (deletedInvoice) {
       res.status(200).json({ success: true });
     } else {
       return next(errorHandler(404, "Invoice not found"));
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    ``;
     return next(errorHandler(500, "Internal Server Error"));
   }
 };

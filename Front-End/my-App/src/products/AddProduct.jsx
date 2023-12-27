@@ -51,7 +51,6 @@ export default function AddProduct() {
       });
       const data = await res.json();
 
-
       if (data.success === false) {
         setError(data.message);
         return;
@@ -97,7 +96,7 @@ export default function AddProduct() {
             onChange={handlechange}
           />
           {error && (
-            <p className="text-center font-semibold text-red-700">{error}</p>
+            <p className="text-center font-2xl font-semibold text-red-700">{error}</p>
           )}
           <input
             type="text"
@@ -130,6 +129,15 @@ export default function AddProduct() {
             onChange={handlechange}
           />
           <input
+            type="number"
+            min={1}
+            id="initailquantity"
+            placeholder=" Initial productquantity "
+            className="p-3 border rounded-lg "
+            inputMode="numeric"
+            onChange={handlechange}
+          />
+          <input
             type="text"
             placeholder="Prduct description"
             id="productdescription"
@@ -148,9 +156,10 @@ export default function AddProduct() {
               <tr className="bg-blue-500 text-white font-semibold">
                 <th className="py-2 px-4 border-r border-b">Id</th>
                 <th className="py-2 px-4 border-r border-b">Name</th>
-                {/* <th className="py-2 px-4 border-r border-b">Category</th> */}
                 <th className="py-2 px-4 border-r border-b">Quantity</th>
                 <th className="py-2 px-4 border-r border-b">Price</th>
+                <th className="py-2 px-4 border-r border-b">Category</th>
+
                 <th className="py-2 px-4 border-b">Action</th>
               </tr>
             </thead>
@@ -166,7 +175,7 @@ export default function AddProduct() {
                     {product.productquantity}
                   </td>
                   <td className="py-2 px-4 border-r">{product.productprice}</td>
-                  
+
                   <td className="py-2 px-4 border-r">
                     {product.productcategory}
                   </td>

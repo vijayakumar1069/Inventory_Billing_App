@@ -120,15 +120,6 @@ export default function Invoice() {
 
     if (currentproduct.productID !== 0) {
       prevProducts.push(currentproduct);
-
-      setCurrentProduct({
-        productID: 0,
-        productname: "",
-        productdescription: "",
-        productcategory: "",
-        productquantity: 1,
-        productprice: 0,
-      });
     }
 
     if (prevProducts.length === 0 && currentproduct.productID === 0) {
@@ -154,9 +145,18 @@ export default function Invoice() {
       if (data.success === false) {
         setError(data.message);
         setLoading(false);
+        return;
       }
       setLoading(false);
       setSuccess("Invoice Created Successfully....");
+      setCurrentProduct({
+        productID: 0,
+        productname: "",
+        productdescription: "",
+        productcategory: "",
+        productquantity: 1,
+        productprice: 0,
+      });
       setCurrentCustomer({ customerID: 0, name: "", email: "", address: "" });
       setPrevProducts([]);
 
@@ -398,9 +398,9 @@ export default function Invoice() {
       {success && (
         <p className="text-green-700 text-center font-semibold">{success}</p>
       )}
-      {error && (
+      {/* {error && (
         <p className="text-red-700 text-center font-semibold">{error}</p>
-      )}
+      )} */}
     </div>
   );
 }
