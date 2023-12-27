@@ -40,7 +40,6 @@ export default function Invoice() {
       setError(false);
 
       setCurrentProduct({ ...data, productquantity: 1 });
-      
     } catch (error) {
       setError(error.message);
     }
@@ -158,6 +157,9 @@ export default function Invoice() {
       }
       setLoading(false);
       setSuccess("Invoice Created Successfully....");
+      setCurrentCustomer({ customerID: 0, name: "", email: "", address: "" });
+      setPrevProducts([]);
+
       setError(false);
 
       console.log(data);
@@ -187,12 +189,10 @@ export default function Invoice() {
             />
             <FaSearch size={25} onClick={handlesearchProductID} />
           </div>
-          <div className="">
-            {" "}
-            {error && (
-              <p className=" p-2 font-semibold text-red-700">{error}</p>
-            )}
-          </div>
+
+          {error && (
+            <p className=" p-2  font-semibold  text-red-700">{error}</p>
+          )}
         </div>
         <div className="flex gap-5 items-center  ">
           <label className="font-semibold w-32">Product Name :</label>
@@ -240,6 +240,7 @@ export default function Invoice() {
             value={currentproduct.productquantity}
           />
         </div>
+
         <div className="flex gap-4 items-center ">
           <label className="font-semibold w-32">Price :</label>
           <input

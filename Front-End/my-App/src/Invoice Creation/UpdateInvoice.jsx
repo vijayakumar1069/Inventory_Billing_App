@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { IoAdd } from "react-icons/io5";
@@ -14,6 +14,7 @@ export const UpdateInvoice = () => {
   const [gst, SetGst] = useState(0);
   const [total, setTotalPrice] = useState(0);
   const [formdata, setFormdata] = useState("");
+  const navigate = useNavigate();
   const handlechange = (e) => {
     setFormdata(e.target.value);
   };
@@ -56,6 +57,7 @@ export const UpdateInvoice = () => {
         return setSuccessMessage(false);
       }
       setSuccessMessage("Invoice updated successfully");
+      navigate("/invoicedetails");
     } catch (error) {
       setErrorMessage(error.message);
       setSuccessMessage(false);
@@ -119,7 +121,6 @@ export const UpdateInvoice = () => {
     calculategst();
     calculatetoatl();
   }, [previnvoiceDetails, calculatetoatl]);
-  const handleedit = () => {};
 
   console.log(previnvoiceDetails);
 
@@ -188,25 +189,23 @@ export const UpdateInvoice = () => {
                     </td>
                     <td className="py-2 font-semibold text-lg border-l border-r-[#0C356A] border-r  text-[#2B3499] text-center ">
                       <div className="flex items-center gap-2 sm:gap-5 sm:justify-center ">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handledelete(product._id);
-                          }}
-                          className="bg-red-500 text-white p-2 rounded "
-                        >
-                          <FontAwesomeIcon icon={faXmark} />
-                        </button>
                         <Link>
                           <button
                             type="button"
                             onClick={() => {
-                              handleedit(product._id);
+                              handledelete(product._id);
                             }}
-                            className="bg-blue-500 text-white p-2 rounded"
+                            className="bg-red-500 text-white p-2 rounded "
                           >
-                            <FontAwesomeIcon icon={faPenToSquare} />
+                            <FontAwesomeIcon icon={faXmark} />
                           </button>
+                        </Link>
+
+                        <Link
+                          to={`/updateinvoiceexistingproductquantity/${paramsid}?productid=${product._id}`}
+                          className="bg-blue-500 text-white p-2 rounded"
+                        >
+                          <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
                       </div>
                     </td>

@@ -10,6 +10,7 @@ const createInvoice = async (req, res, next) => {
   try {
     let existingInvoice;
     let newInvoiceNumber;
+    console.log(req.body);
 
     // Generate a unique invoice number based on last invoice number
     let lastInvoice = await INVOICE.findOne(
@@ -52,6 +53,20 @@ const createInvoice = async (req, res, next) => {
     });
 
     await newInvoice.save();
+    for (const product of req.body.prevProducts) {
+      const productquantitydecresing = await PRODUCT.findByIdAndUpdate(
+        product._id,
+        {
+          $inc: {
+            productquantity: -product.productquantity,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    }
+    await productquantitydecresing.save();
 
     res.status(200).json({ newInvoice });
   } catch (error) {
@@ -236,6 +251,100 @@ const deleteproductfrominvoice = async (req, res, json) => {
   }
 };
 
+const updateproductquantityinexisitinginvoice = async (req, res, next) => {
+  console.log(req.params.id);
+  console.log(req.query);
+  console.log(req.query.productid);
+  const invoice = await INVOICE.findOne({ _id: req.params.id });
+
+  if (!invoice) {
+    return next(errorHandler(404, "Invoice not found"));
+  }
+
+  const product = invoice.products.find((product) => {
+    return product._id == req.query.productid;
+  });
+
+  // Now, product will contain the product with the matching product ID.
+
+  console.log("product", product);
+  res.status(200).json(product);
+};
+const updateproductsdoneinexistinginvoice = async (req, res, next) => {
+  console.log(req.body);
+  console.log(req.params.id);
+  console.log(req.query.productid);
+  const invoice = await INVOICE.findOne({ _id: req.params.id });
+  if (!invoice) {
+    return next(errorHandler(404, "Invoice Not Found"));
+  }
+  let currentproductquantity = 0;
+  for (const product of invoice.products) {
+    if (product._id == req.query.productid) {
+      product.productquantity = req.body.prevProductsDetails.productquantity;
+      currentproductquantity = product.productquantity;
+    }
+  }
+
+  await invoice.save();
+
+  const product = await PRODUCT.findOne({ _id: req.query.productid });
+  console.log(product);
+  if (
+    product.productquantity == 0 ||
+    product.productquantity < currentproductquantity
+  ) {
+    return next(errorHandler(404, "no stock quantity"));
+  }
+  const updatedproduct = await PRODUCT.findByIdAndUpdate(
+    req.query.productid,
+
+    {
+      $inc: {
+        productquantity: -currentproductquantity,
+      },
+    },
+    { new: true }
+  );
+  await updatedproduct.save();
+
+  res.status(200).json(invoice);
+};
+const deleteinvoice = async (req, res, next) => {
+  try {
+    const { deleteid } = req.query;
+    const deleteinvoice = await INVOICE.findOne({ _id: deleteid });
+
+    if (deleteinvoice) {
+      for (const product of deleteinvoice.products) {
+        console.log(product.productquantity);
+        await PRODUCT.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: {
+              productquantity: +product.productquantity,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      }
+    }
+
+    const updatedinvoice = await INVOICE.findByIdAndDelete(deleteid);
+
+    if (updatedinvoice) {
+      res.status(200).json({ success: true });
+    } else {
+      return next(errorHandler(404, "Invoice not found"));
+    }
+  } catch (error) {
+    console.log(error);
+    return next(errorHandler(500, "Internal Server Error"));
+  }
+};
+
 module.exports = {
   createInvoice,
   getallInvoices,
@@ -244,4 +353,7 @@ module.exports = {
   addproductstoexistinginvoice,
   updateexistinginvoice,
   deleteproductfrominvoice,
+  updateproductquantityinexisitinginvoice,
+  updateproductsdoneinexistinginvoice,
+  deleteinvoice,
 };

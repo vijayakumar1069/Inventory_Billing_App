@@ -126,6 +126,9 @@ const getProduct = async (req, res, next) => {
   if (!product) {
     return next(errorHandler(404, "Product not found"));
   }
+  if (product.productquantity == 0) {
+    return next(errorHandler(404, "Out of Stock"));
+  }
   const { productquantity: quantity, ...rest } = product._doc;
   res.status(200).json(rest);
 };

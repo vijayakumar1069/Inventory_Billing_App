@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useAsyncError } from "react-router-dom";
 export default function InvoiceDetails() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,8 +24,6 @@ export default function InvoiceDetails() {
 
       // Update the URL with the new parameters
       window.history.replaceState({}, "", `?${params.toString()}`);
-
-     
 
       const res = await fetch(
         `/api/invoices/getallInvoices?${params.toString()}`
@@ -57,8 +55,6 @@ export default function InvoiceDetails() {
     // Update the URL with the new parameters
     window.history.replaceState({}, "", `?${params.toString()}`);
 
-    
-
     const res = await fetch(
       `/api/invoices/getallInvoices?${params.toString()}`
     );
@@ -66,9 +62,33 @@ export default function InvoiceDetails() {
     console.log(data);
     if (data.success === false) {
       setError(data.message);
+      return;
     }
 
     setInvoices(data);
+  };
+  const handledelete = async (deleteid) => {
+    try {
+      const res = await fetch(
+        `/api/invoices/deleteinvoice?deleteid=${deleteid}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (data.success == false) {
+        setError(data.message);
+        return;
+      }
+
+      // Remove the deleted invoice from the local state
+      setInvoices((prevInvoices) =>
+        prevInvoices.filter((invoice) => invoice._id !== deleteid)
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -177,7 +197,10 @@ export default function InvoiceDetails() {
                             Update
                           </button>
                         </Link>
-                        <button className="bg-red-500 text-white px-2 py-1 rounded">
+                        <button
+                          className="bg-red-500 text-white px-2 py-1 rounded"
+                          onClick={() => handledelete(invoice._id)}
+                        >
                           Delete
                         </button>
                       </div>

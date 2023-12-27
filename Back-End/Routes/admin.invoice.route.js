@@ -8,6 +8,9 @@ const {
   addproductstoexistinginvoice,
   updateexistinginvoice,
   deleteproductfrominvoice,
+  updateproductquantityinexisitinginvoice,
+  updateproductsdoneinexistinginvoice,
+  deleteinvoice,
 } = require("../Controller/admin.invoice.controller");
 const router = express.Router();
 router.post("/createInvoice/", verifyAdmin, createInvoice);
@@ -29,4 +32,15 @@ router.delete(
   verifyAdmin,
   deleteproductfrominvoice
 );
+router.get(
+  "/updateproductquantityinexisitinginvoice/:id",
+  verifyAdmin,
+  updateproductquantityinexisitinginvoice
+);
+router.post(
+  "/updateproductsdoneinexistinginvoice/:id",
+  verifyAdmin,
+  updateproductsdoneinexistinginvoice
+);
+router.delete("/deleteinvoice", deleteinvoice);
 module.exports = router;
