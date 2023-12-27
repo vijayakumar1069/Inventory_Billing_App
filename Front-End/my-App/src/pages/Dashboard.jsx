@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import {
   FaShoppingBag,
@@ -11,6 +11,14 @@ import BarChart from "../components/BarChart";
 import PieChart from "../components/PieChart";
 
 export default function Dashboard() {
+  useEffect(() => {
+    const fetching = async () => {
+      const res = await fetch("/api/dashboard/getdashboarddetails");
+      const data = await res.json();
+      console.log(data);
+    };
+    fetching();
+  }, []);
   return (
     <div className="mx-2 my-3 p-2 ">
       <div className="p-2 flex flex-col gap-4 justify-between    flex-wrap  sm:flex-row   ">
@@ -20,7 +28,7 @@ export default function Dashboard() {
             className="bg-yellow-300 rounded-full w-10 h-8 "
           />
           <div className=" flex flex-col ">
-            <h3>Total Sales</h3>
+            <h3>Total Product Value</h3>
             <p>$ 5432</p>
           </div>
         </div>
@@ -30,15 +38,15 @@ export default function Dashboard() {
             className="bg-yellow-300 rounded-full w-10 h-8 "
           />
           <div className="  flex flex-col">
-            <h3>Total Expenses</h3>
+            <h3>Total Sales</h3>
             <p>$ 5432</p>
           </div>
         </div>
         <div className="flex  items-center gap-5 bg-slate-500 p-3 rounded-lg">
           <FaUser size={30} className="bg-yellow-300 rounded-full w-10 h-8 " />
           <div className=" flex flex-col">
-            <h3>Total User</h3>
-            <p>$ 5432</p>
+            <h3>Total Customer</h3>
+            <p> 5432</p>
           </div>
         </div>
         <div className="flex  items-center gap-5 bg-slate-500 p-3 rounded-lg">
@@ -47,14 +55,14 @@ export default function Dashboard() {
             className="bg-yellow-300 rounded-full w-10 h-8 "
           />
           <div className=" flex flex-col">
-            <h3>Total customers</h3>
+            <h3>Out Of STock</h3>
             <p>$ 5432</p>
           </div>
         </div>
         <div className="flex  items-center gap-5 bg-slate-500 p-3 rounded-lg">
           <FaCheck size={30} className="bg-yellow-300 rounded-full w-10 h-8 " />
           <div className=" flex flex-col">
-            <h3>Total Orders</h3>
+            <h3>Total Orders Placed</h3>
             <p>5432</p>
           </div>
         </div>

@@ -222,8 +222,18 @@ const updateproductquantityinexisitinginvoice = async (req, res, next) => {
   const product = invoice.products.find((product) => {
     return product._id == req.query.productid;
   });
-
-  // Now, product will contain the product with the matching product ID.
+  for (const products of invoice.products) {
+    const updateproductquantity = await PRODUCT.findByIdAndUpdate(
+      products._id,
+      {
+        $inc: {
+          productquantity: +products.productquantity,
+        },
+      },
+      { new: true }
+    );
+    await updateproductquantity.save();
+  }
 
   res.status(200).json(product);
 };
@@ -266,11 +276,17 @@ const updateproductsdoneinexistinginvoice = async (req, res, next) => {
 const deleteinvoice = async (req, res, next) => {
   try {
     const { deleteid } = req.query;
-    const deleteinvoice = await INVOICE.findOne({ _id: deleteid });
 
-    if (deleteinvoice) {
-      // Increment product quantity for each product in the invoice
-      for (const product of deleteinvoice.products) {
+    // Check if the invoice exists
+    const deleteinvoice = await INVOICE.findOne({ _id: deleteid });
+    if (!deleteinvoice) {
+      return next(errorHandler(404, "Invoice not found"));
+    }
+
+    // Use Promise.all to await multiple asynchronous operations concurrently
+    await Promise.all(
+      deleteinvoice.products.map(async (product) => {
+        // Increment product quantity for each product in the invoice
         await PRODUCT.findByIdAndUpdate(
           product._id,
           {
@@ -278,39 +294,38 @@ const deleteinvoice = async (req, res, next) => {
               productquantity: +product.productquantity,
             },
           },
-          {
-            new: true,
-          }
+          { new: true }
         );
-      }
+      })
+    );
 
-      // Remove products from customer's previouslyOrderedProducts array
-      const productsdeletefromcustomer = await CUSTOMER.findOne({
-        email: deleteinvoice.customer.email,
-      });
-
-      const updatedPreviouslyOrderedProducts =
-        productsdeletefromcustomer.previouslyOrderedProducts.filter(
-          (prevproductofcustomer) =>
-            !deleteinvoice.products.some((product) =>
-              product._id.equals(prevproductofcustomer)
-            )
-        );
-
-      productsdeletefromcustomer.previouslyOrderedProducts =
-        updatedPreviouslyOrderedProducts;
-
-      // Remove the invoice from the customer's totalinvoice array
-      const updatedTotalInvoices =
-        productsdeletefromcustomer.totalinvoice.filter(
-          (previnvoiceofcustomer) => !previnvoiceofcustomer.equals(deleteid)
-        );
-
-      productsdeletefromcustomer.totalinvoice = updatedTotalInvoices;
-
-      // Save the changes to the customer document
-      await productsdeletefromcustomer.save();
+    // Remove products from customer's previouslyOrderedProducts array
+    const productsdeletefromcustomer = await CUSTOMER.findOne({
+      email: deleteinvoice.customer.email,
+    });
+    if (!productsdeletefromcustomer) {
+      return next(errorHandler(404, "Customer Not Found"));
     }
+    const updatedPreviouslyOrderedProducts =
+      productsdeletefromcustomer.previouslyOrderedProducts.filter(
+        (prevproductofcustomer) =>
+          !deleteinvoice.products.some((product) =>
+            product._id.equals(prevproductofcustomer)
+          )
+      );
+
+    productsdeletefromcustomer.previouslyOrderedProducts =
+      updatedPreviouslyOrderedProducts;
+
+    // Remove the invoice from the customer's totalinvoice array
+    const updatedTotalInvoices = productsdeletefromcustomer.totalinvoice.filter(
+      (previnvoiceofcustomer) => !previnvoiceofcustomer.equals(deleteid)
+    );
+
+    productsdeletefromcustomer.totalinvoice = updatedTotalInvoices;
+
+    // Save the changes to the customer document
+    await productsdeletefromcustomer.save();
 
     // Delete the invoice
     const updatedinvoice = await INVOICE.findByIdAndDelete(deleteid);

@@ -13,17 +13,20 @@ export default function AddProduct() {
     productquantity: 0,
     productprice: 0,
   });
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetching = async () => {
       try {
         const res = await fetch(`/api/products/getproducts/${currentUser._id}`);
         const data = await res.json();
         if (data.success === false) {
-          console.log(data.message);
+          setError(data.message);
+          return;
         }
         setPrevProducts(data);
+        setError(false);
       } catch (error) {
-        console.log(error.message);
+        setError(error.message);
       }
     };
     fetching();
@@ -47,13 +50,16 @@ export default function AddProduct() {
         body: JSON.stringify(formdata),
       });
       const data = await res.json();
-      setPrevProducts([data, ...prevProducts]);
+
 
       if (data.success === false) {
-        return console.log(data.message);
+        setError(data.message);
+        return;
       }
+      setError(false);
+      setPrevProducts([data, ...prevProducts]);
     } catch (error) {
-      console.log(error.message);
+      setError(data.message);
     }
   };
   const handleDelete = async (id) => {
@@ -90,6 +96,9 @@ export default function AddProduct() {
             inputMode="numeric"
             onChange={handlechange}
           />
+          {error && (
+            <p className="text-center font-semibold text-red-700">{error}</p>
+          )}
           <input
             type="text"
             placeholder="Product Name"
@@ -114,7 +123,7 @@ export default function AddProduct() {
           <input
             type="number"
             min={1}
-            id="quantity"
+            id="productquantity"
             placeholder="productquantity"
             className="p-3 border rounded-lg "
             inputMode="numeric"
@@ -134,12 +143,12 @@ export default function AddProduct() {
       </div>
       {prevProducts.length > 0 && (
         <div className="max-w-5xl mx-auto overflow-x-auto p-3">
-          <table className="table-auto w-full border-collapse border">
+          <table className="table-auto w-full border-collapse border border-yellow-400">
             <thead>
               <tr className="bg-blue-500 text-white font-semibold">
                 <th className="py-2 px-4 border-r border-b">Id</th>
                 <th className="py-2 px-4 border-r border-b">Name</th>
-                <th className="py-2 px-4 border-r border-b">Category</th>
+                {/* <th className="py-2 px-4 border-r border-b">Category</th> */}
                 <th className="py-2 px-4 border-r border-b">Quantity</th>
                 <th className="py-2 px-4 border-r border-b">Price</th>
                 <th className="py-2 px-4 border-b">Action</th>
@@ -149,23 +158,25 @@ export default function AddProduct() {
               {prevProducts.map((product) => (
                 <tr
                   key={product._id}
-                  className="text-center border-b border-black "
+                  className="text-center border-b border-black hover:bg-purple-300 "
                 >
                   <td className="py-2 px-4 border-r">{product.productID}</td>
                   <td className="py-2 px-4 border-r">{product.productname}</td>
-                  <td className="py-2 px-4 border-r">{product.productprice}</td>
                   <td className="py-2 px-4 border-r">
                     {product.productquantity}
                   </td>
+                  <td className="py-2 px-4 border-r">{product.productprice}</td>
+                  
                   <td className="py-2 px-4 border-r">
                     {product.productcategory}
                   </td>
                   <td className="py-2 px-4 my-5 ">
                     <div className="flex flex-col p-3 gap-2 ">
-                      <Link to={`/editproduct/${product._id}`}>
-                        <button className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 ">
-                          Edit
-                        </button>
+                      <Link
+                        to={`/editproduct/${product._id}`}
+                        className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 "
+                      >
+                        <button>Edit</button>
                       </Link>
 
                       <button

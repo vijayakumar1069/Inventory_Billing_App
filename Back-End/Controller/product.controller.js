@@ -8,6 +8,14 @@ const addProduct = async (req, res, next) => {
     if (req.user.id != req.params.id) {
       return next(errorHandler(404, "your not authorized to add product"));
     }
+    console.log(req.body);
+    const checkexistingproduct = await PRODUCT.findOne({
+      productID: req.body.productID,
+    });
+    console.log(checkexistingproduct);
+    if (checkexistingproduct) {
+      return next(errorHandler(404, "Product Already Exists"));
+    }
 
     const newproduct = new PRODUCT({
       productID: req.body.productID,

@@ -7,6 +7,7 @@ const adminRoutes = require("./Routes/admin.route.js");
 const productsRoutes = require("./Routes/product.route.js");
 const customerRouter = require("./Routes/customer.route.js");
 const invoicerouter = require("./Routes/admin.invoice.route.js");
+const dashboardRoutes=require("./Routes/admin.dashboard.route.js")
 const cookieparser = require("cookie-parser");
 const app = express();
 app.use(body_parser.json());
@@ -26,6 +27,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/customers", customerRouter);
 app.use("/api/invoices", invoicerouter);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

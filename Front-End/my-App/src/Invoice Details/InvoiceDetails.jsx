@@ -141,6 +141,8 @@ export default function InvoiceDetails() {
         </button>
       </form>
 
+      {error&&(<p className="text-center font-semibold text-2xl text-red-500">{error}</p>)}
+
       <div className="p-4 ">
         <div className="overflow-x-auto">
           {invoices.length > 0 ? (
@@ -158,7 +160,7 @@ export default function InvoiceDetails() {
               </thead>
               <tbody>
                 {invoices.map((invoice, i) => (
-                  <tr key={i} className="hover:bg-gray-200 text-center">
+                  <tr key={i} className="hover:bg-yellow-200 text-center">
                     <td className="py-2 border-l border-r">
                       {invoice.invoiceNumber}
                     </td>
@@ -189,8 +191,8 @@ export default function InvoiceDetails() {
                     <td className="py-2 border-l border-r">
                       {invoice.dueDate}
                     </td>
-                    <td className="py-2 border-l border-r">
-                      <div className="flex p-2 items-center gap-2 ">
+                    <td className="py-2 border-l border-r ">
+                      <div className="flex p-2 items-center gap-2 justify-center ">
                         <Link to={`/updateinvoice/${invoice._id}`}>
                           {" "}
                           <button className="bg-blue-500 text-white px-2 py-1 rounded">

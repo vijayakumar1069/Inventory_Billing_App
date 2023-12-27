@@ -1,7 +1,9 @@
 const express = require("express");
+
 const CUSTOMER = require("../Models/admin.customer.js");
 const errorHandler = require("../Utils/errorHandler.js");
 const ADMIN = require("../Models/admin.model.js");
+const INVOICE = require("../Models/admin.invoice.model.js");
 
 const addCustomer = async (req, res, next) => {
   try {
@@ -9,13 +11,13 @@ const addCustomer = async (req, res, next) => {
 
     const customer = await CUSTOMER.findOne({ customerID });
     if (customer) {
-      return next(errorHandler(404, "al;ready existes"));
+      return next(errorHandler(404, "already existes"));
     } else {
       if (!customerID || !name || !email || !address) {
         return next(errorHandler(404, "must fill all above values"));
       }
       const newcustomer = new CUSTOMER({ customerID, name, email, address });
-      newcustomer.save();
+      await newcustomer.save();
       res.status(200).json(newcustomer);
     }
   } catch (error) {
@@ -66,12 +68,24 @@ const updatecustomer = async (req, res, next) => {
   }
 };
 const deletecustomer = async (req, res, next) => {
-  const customer = await CUSTOMER.findByIdAndDelete(req.params.id);
-  if (!customer) {
-    next(errorHandler(404, "customer_not_found"));
+  try {
+    const customer = await CUSTOMER.findByIdAndDelete(req.params.id);
+    if (!customer) {
+      return next(errorHandler(404, "customer_not_found"));
+    }
+
+    const customerEmail = customer.email;
+
+    const invoices = await INVOICE.find({ "customer.email": customerEmail });
+
+    await INVOICE.deleteMany({ "customer.email": customerEmail });
+
+    res.status(200).json("deleted successfully........");
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json("deleted successfully........");
 };
+
 const getcustomer = async (req, res, next) => {
   const customer = await CUSTOMER.findOne({ customerID: req.params.id });
   if (!customer) {

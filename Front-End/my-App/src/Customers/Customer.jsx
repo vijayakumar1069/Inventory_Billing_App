@@ -122,58 +122,55 @@ export default function Customer() {
           )}
         </form>
       </div>
-
-      {customer.length > 0 && (
-        <div className="max-w-full overflow-x-auto p-3">
-          <table className="table-auto w-full border-collapse border">
-            <thead>
-              <tr className="bg-blue-500 text-white font-semibold">
-                <th className="py-2 px-4 border-r border-b">Id</th>
-                <th className="py-2 px-4 border-r border-b">Name</th>
-                <th className="py-2 px-4 border-r border-b">EMAIL</th>
-                <th className="py-2 px-4 border-r border-b">ADDRESS</th>
-                <th className="py-2 px-4 border-r border-b">TOTAL ORDERS</th>
-
-                <th className="py-2 px-4 border-b">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customer.map((cus) => (
-                <tr
-                  key={customer._id}
-                  className="text-center border-b border-black "
+      {customer.length > 0 ? (
+  <div className="max-w-full overflow-x-auto p-3">
+    <table className="table-auto w-full border-collapse border">
+      <thead>
+        <tr className="bg-blue-500 text-white font-semibold">
+          <th className="py-2 px-4 border-r border-b">Id</th>
+          <th className="py-2 px-4 border-r border-b">Name</th>
+          <th className="py-2 px-4 border-r border-b">EMAIL</th>
+          <th className="py-2 px-4 border-r border-b">ADDRESS</th>
+          <th className="py-2 px-4 border-r border-b">TOTAL ORDERS</th>
+          <th className="py-2 px-4 border-b">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {customer.map((cus) => (
+          <tr
+            key={customer._id}
+            className="text-center border-b border-black hover:bg-purple-300  sm:table-row"
+          >
+            <td className="py-2 px-4 border-r">{cus.customerID}</td>
+            <td className="py-2 px-4 border-r">{cus.name}</td>
+            <td className="py-2 px-4 border-r">{cus.email}</td>
+            <td className="py-2 px-4 border-r">{cus.address}</td>
+            <td className="py-2 px-4 border-r">
+              {cus.previouslyOrderedProducts.length}
+            </td>
+            <td className="py-2 px-4 my-5 sm:my-0">
+              <div className="flex flex-col p-3 gap-2 ">
+                <Link to={`/editcustomer/${cus._id}`} className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 ">
+                  <button >
+                    Edit
+                  </button>
+                </Link>
+                <button
+                  className="p-3 border bg-red-500 rounded-lg font-semibold text-white hover:opacity-80"
+                  onClick={() => handleDelete(cus._id)}
                 >
-                  <td className="py-2 px-4 border-r">{cus.customerID}</td>
-                  <td className="py-2 px-4 border-r">{cus.name}</td>
-                  <td className="py-2 px-4 border-r">{cus.email}</td>
-                  <td className="py-2 px-4 border-r">{cus.address}</td>
-
-                  <td className="py-2 px-4 border-r">
-                    {cus.previouslyOrderedProducts.length}
-                  </td>
-
-                  <td className="py-2 px-4 my-5 ">
-                    <div className="flex flex-col p-3 gap-2 ">
-                      <Link to={`/editcustomer/${cus._id}`}>
-                        <button className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 ">
-                          Edit
-                        </button>
-                      </Link>
-
-                      <button
-                        className="p-3 border bg-red-500 rounded-lg font-semibold text-white hover:opacity-80"
-                        onClick={() => handleDelete(cus._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <p className="text-center mt-6 font-semibold ">No customer is created </p>
+)}
     </div>
   );
 }
