@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
-const PRODUCT=require("./admin.products")
+const PRODUCT = require("./admin.products");
+const INVOICE = require("./admin.invoice.model");
 
 const customerSchema = new mongoose.Schema(
   {
     customerID: {
       type: Number,
       required: true,
-      unique: true
+      unique: true,
     },
     name: {
       type: String,
@@ -23,7 +24,13 @@ const customerSchema = new mongoose.Schema(
     previouslyOrderedProducts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"PRODUCT",
+        ref: "PRODUCT",
+      },
+    ],
+    totalinvoice: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "INVOICE",
       },
     ],
   },

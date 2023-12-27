@@ -3,9 +3,9 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { IoAdd } from "react-icons/io5";
-
+  
 export const UpdateInvoice = () => {
-  const [previnvoiceDetails, setPrevInvoiceDetails] = useState(null);
+  const [previnvoiceDetails, setPrevInvoiceDetails] = useState();
   const params = useParams();
   const paramsid = params.id;
   const [errormessage, setErrorMessage] = useState(false);
@@ -40,7 +40,7 @@ export const UpdateInvoice = () => {
   };
   const handlesubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const res = await fetch(
         `/api/invoices/updateexistinginvoice/${paramsid}`,
@@ -56,6 +56,14 @@ export const UpdateInvoice = () => {
         setErrorMessage(data.message);
         return setSuccessMessage(false);
       }
+  
+      // Update the status in the component state
+      setPrevInvoiceDetails((prevInvoice) => ({
+        ...prevInvoice,
+        status: data.invoice.status,
+      }));
+   
+  
       setSuccessMessage("Invoice updated successfully");
       navigate("/invoicedetails");
     } catch (error) {
@@ -63,6 +71,7 @@ export const UpdateInvoice = () => {
       setSuccessMessage(false);
     }
   };
+  
   const handledelete = async (delete_id) => {
     console.log("hii");
     try {
@@ -86,7 +95,6 @@ export const UpdateInvoice = () => {
     }
   };
 
-  // Inside your UpdateInvoice component
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -102,6 +110,7 @@ export const UpdateInvoice = () => {
               invoiceNumber: data.invoice.invoiceNumber,
               products: data.invoice.products,
               customer: data.invoice.customer,
+              status: data.invoice.status,
             }));
           } else {
             setErrorMessage("Invoice not found");
@@ -121,8 +130,6 @@ export const UpdateInvoice = () => {
     calculategst();
     calculatetoatl();
   }, [previnvoiceDetails, calculatetoatl]);
-
-  console.log(previnvoiceDetails);
 
   return (
     <div>
@@ -286,13 +293,16 @@ export const UpdateInvoice = () => {
               id="status"
               onChange={handlechange}
               className=" bg-[#EADBC8]"
+              defaultValue={previnvoiceDetails? previnvoiceDetails.status:"Pending"}
+              
             >
               <option value="Pending">Pending</option>
               <option value="Paid">Paid</option>
-              <option value="Shpped">Shpped</option>
+              <option value="Shipped">Shipped</option>
               <option value="Delivered">Delivered</option>
             </select>
           </div>
+          
 
           <button className="p-3 border bg-[#001524] text-white uppercase rounded-lg w-full font-semibold hover:bg-[#22668D] ">
             Update

@@ -68,7 +68,7 @@ export const UpdateExistingInvoiceProductDetails = () => {
         return;
       }
       navigate(`/updateinvoice/${id}`);
-      console.log(data);
+     
     } catch (error) {}
   };
   return (

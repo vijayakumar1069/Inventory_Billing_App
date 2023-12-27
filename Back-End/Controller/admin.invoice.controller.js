@@ -10,7 +10,6 @@ const createInvoice = async (req, res, next) => {
   try {
     let existingInvoice;
     let newInvoiceNumber;
-    console.log(req.body);
 
     // Generate a unique invoice number based on last invoice number
     let lastInvoice = await INVOICE.findOne(
@@ -66,7 +65,16 @@ const createInvoice = async (req, res, next) => {
         }
       );
     }
-    await productquantitydecresing.save();
+
+    const addproductstocustomer = await CUSTOMER.findOne({
+      _id: req.body.currentCustomer._id,
+    });
+    for (const product of req.body.prevProducts) {
+      addproductstocustomer.previouslyOrderedProducts.push(product._id);
+    }
+
+    addproductstocustomer.totalinvoice.push(newInvoice._id);
+    await addproductstocustomer.save();
 
     res.status(200).json({ newInvoice });
   } catch (error) {
@@ -164,64 +172,17 @@ const updateexistinginvoice = async (req, res, next) => {
     if (!updateproductsincustomer) {
       return next(errorHandler(404, "Customer not found"));
     }
-    if (req.body.formdata === "Paid") {
-      console.log("hii");
-      invoice.status = "Paid";
-      await invoice.save();
 
-      // Use a for...of loop to ensure synchronous execution
-      for (const product of invoice.products) {
-        try {
-          // Find the product in the database
-          const existingProduct = await PRODUCT.findById(product._id);
-          if (!existingProduct) {
-            return next(
-              errorHandler(404, `Product ${product.productname} is Not Found`)
-            );
-          }
+    invoice.status = req.body.formdata;
+    await invoice.save();
 
-          // Check if the product quantity in the database is greater than or equal to the invoice quantity
-          if (existingProduct.productquantity < product.productquantity) {
-            return next(
-              errorHandler(
-                404,
-                `Insuffient qunation for product ${existingProduct.productname}`
-              )
-            );
-          }
-
-          // Check if the product quantity in the database is 0
-          if (existingProduct.productquantity === 0) {
-            return next(
-              errorHandler(
-                404,
-                `Product ${existingProduct.productname} is out of stock`
-              )
-            );
-          }
-
-          // Update the product quantity in the database
-          const updatedProduct = await PRODUCT.findByIdAndUpdate(
-            product._id,
-            {
-              $inc: { productquantity: -product.productquantity },
-            },
-            { new: true }
-          );
-          updateproductsincustomer.previouslyOrderedProducts.push(product._id);
-          updateproductsincustomer.save();
-        } catch (error) {
-          // Handle errors if necessary
-          console.error(`Error updating product quantity: ${error.message}`);
-        }
-      }
-    }
-
-    res.status(200).json("success");
+    // Respond with the updated invoice
+    res.status(200).json({ success: true, invoice: invoice });
   } catch (error) {
     next(error);
   }
 };
+
 const deleteproductfrominvoice = async (req, res, json) => {
   const invoice = await INVOICE.findById(req.params.id);
   try {
@@ -252,9 +213,6 @@ const deleteproductfrominvoice = async (req, res, json) => {
 };
 
 const updateproductquantityinexisitinginvoice = async (req, res, next) => {
-  console.log(req.params.id);
-  console.log(req.query);
-  console.log(req.query.productid);
   const invoice = await INVOICE.findOne({ _id: req.params.id });
 
   if (!invoice) {
@@ -267,13 +225,9 @@ const updateproductquantityinexisitinginvoice = async (req, res, next) => {
 
   // Now, product will contain the product with the matching product ID.
 
-  console.log("product", product);
   res.status(200).json(product);
 };
 const updateproductsdoneinexistinginvoice = async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.params.id);
-  console.log(req.query.productid);
   const invoice = await INVOICE.findOne({ _id: req.params.id });
   if (!invoice) {
     return next(errorHandler(404, "Invoice Not Found"));
@@ -286,10 +240,8 @@ const updateproductsdoneinexistinginvoice = async (req, res, next) => {
     }
   }
 
-  await invoice.save();
-
   const product = await PRODUCT.findOne({ _id: req.query.productid });
-  console.log(product);
+
   if (
     product.productquantity == 0 ||
     product.productquantity < currentproductquantity
@@ -307,6 +259,7 @@ const updateproductsdoneinexistinginvoice = async (req, res, next) => {
     { new: true }
   );
   await updatedproduct.save();
+  await invoice.save();
 
   res.status(200).json(invoice);
 };
@@ -316,8 +269,8 @@ const deleteinvoice = async (req, res, next) => {
     const deleteinvoice = await INVOICE.findOne({ _id: deleteid });
 
     if (deleteinvoice) {
+      // Increment product quantity for each product in the invoice
       for (const product of deleteinvoice.products) {
-        console.log(product.productquantity);
         await PRODUCT.findByIdAndUpdate(
           product._id,
           {
@@ -330,8 +283,36 @@ const deleteinvoice = async (req, res, next) => {
           }
         );
       }
+
+      // Remove products from customer's previouslyOrderedProducts array
+      const productsdeletefromcustomer = await CUSTOMER.findOne({
+        email: deleteinvoice.customer.email,
+      });
+
+      const updatedPreviouslyOrderedProducts =
+        productsdeletefromcustomer.previouslyOrderedProducts.filter(
+          (prevproductofcustomer) =>
+            !deleteinvoice.products.some((product) =>
+              product._id.equals(prevproductofcustomer)
+            )
+        );
+
+      productsdeletefromcustomer.previouslyOrderedProducts =
+        updatedPreviouslyOrderedProducts;
+
+      // Remove the invoice from the customer's totalinvoice array
+      const updatedTotalInvoices =
+        productsdeletefromcustomer.totalinvoice.filter(
+          (previnvoiceofcustomer) => !previnvoiceofcustomer.equals(deleteid)
+        );
+
+      productsdeletefromcustomer.totalinvoice = updatedTotalInvoices;
+
+      // Save the changes to the customer document
+      await productsdeletefromcustomer.save();
     }
 
+    // Delete the invoice
     const updatedinvoice = await INVOICE.findByIdAndDelete(deleteid);
 
     if (updatedinvoice) {
