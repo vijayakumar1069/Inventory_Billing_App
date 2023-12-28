@@ -172,7 +172,7 @@ export default function AddProduct() {
               {prevProducts.map((product) => (
                 <tr
                   key={product._id}
-                  className="text-center border-b border-black hover:bg-purple-300"
+                  className="text-center border-b border-black  hover:bg-[#FFDFDF] hover:scale-105 transition duration-300"
                 >
                   <td className="py-2 px-4 border-r">{product.productID}</td>
                   <td className="py-2 px-4 border-r">{product.productname}</td>

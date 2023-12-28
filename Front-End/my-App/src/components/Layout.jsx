@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col ">
       <div className="w-full">
         <Header />
       </div>

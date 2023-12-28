@@ -86,7 +86,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-[#F4EAE0] p-3 rounded-lg shadow-md flex items-center gap-10 hover:scale-x-105 transition duration-300">
+        <div className="bg-[#F4EAE0] p-3 rounded-lg shadow-md flex items-center gap-5 hover:scale-x-105 transition duration-300">
           <FaArrowLeft
             size={30}
             className="bg-yellow-300 rounded-full w-10 h-8"

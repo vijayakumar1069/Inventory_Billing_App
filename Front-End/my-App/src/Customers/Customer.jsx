@@ -138,7 +138,7 @@ export default function Customer() {
               {customer.map((cus) => (
                 <tr
                   key={cus._id}
-                  className="text-center border-b border-black hover:bg-purple-300 sm:table-row"
+                  className="text-center border-b border-black  hover:bg-[#FFDFDF] hover:scale-105 transition duration-300 sm:table-row"
                 >
                   <td className="py-2 px-4 border-r hidden sm:table-cell">{cus.customerID}</td>
                   <td className="py-2 px-4 border-r">{cus.name}</td>
