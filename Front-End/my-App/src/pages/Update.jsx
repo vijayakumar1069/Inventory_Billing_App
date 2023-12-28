@@ -63,56 +63,63 @@ export default function Update() {
     }
   };
   return (
-    <div className="">
-     
-      <div className="flex flex-col items-center max-w-20 sm:max-w-2xl md:max-w-2xl rounded-lg bg-slate-400 mx-auto mt-10 p-5 ">
-        <h1 className="text-2xl uppercase font-bold text-black">Profile</h1>
-        <form
-          className="flex flex-col md:w-96  mt-5 gap-5"
-          onSubmit={handlesubmit}
-        >
-          <input
-            type="text"
-            id="username"
-            defaultValue={currentUser.username}
-            className="border p-3 rounded-lg "
-            onChange={handlechange}
-          />
-          <input
-            type="email"
-            id="email"
-            value={currentUser.email}
-            className="border p-3 rounded-lg "
-            onChange={handlechange}
-          />
-          <input
-            type="password"
-            id="password"
-            className="border p-3 rounded-lg "
-            onChange={handlechange}
-          />
-          <button className=" uppercase bg-blue-700 p-3 rounded-lg hover:opacity-80 cursor-pointer">
-            Update
-          </button>
-          <button
-            type="button"
-            onClick={handledelete}
-            className=" uppercase bg-red-700 p-3 rounded-lg hover:opacity-80 cursor-pointer"
-          >
-            Logout
-          </button>
-          {success && (
-            <p className="text-lg font-semibold text-center text-green-800">
-              updated successfully...
-            </p>
-          )}
-          {error && (
-            <p className="text-sm font-semibold text-center text-red-800">
-              {error}
-            </p>
-          )}
-        </form>
-      </div>
-    </div>
+    <div className="flex flex-col items-center max-w-screen-md rounded-lg bg-gradient-to-b from-slate-600 via-slate-400 to-slate-200 mx-auto mt-10 p-5 shadow-lg">
+    <h1 className="text-3xl uppercase font-bold text-white mb-5">Profile</h1>
+    <form className="flex flex-col w-full md:w-96 gap-5" onSubmit={handlesubmit}>
+      {/* Username Input */}
+      <input
+        type="text"
+        id="username"
+        defaultValue={currentUser.username}
+        className="border p-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300 transition duration-300 text-black"
+        onChange={handlechange}
+        placeholder="Username"
+      />
+      {/* Email Input */}
+      <input
+        type="email"
+        id="email"
+        value={currentUser.email}
+        className="border p-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300 transition duration-300 text-black"
+        onChange={handlechange}
+        placeholder="Email"
+      />
+      {/* Password Input */}
+      <input
+        type="password"
+        id="password"
+        className="border p-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300 transition duration-300 text-black"
+        onChange={handlechange}
+        placeholder="Password"
+      />
+      {/* Update Button */}
+      <button
+        className="uppercase bg-blue-700 p-3 rounded-lg hover:opacity-80 cursor-pointer transition duration-300"
+      >
+        Update
+      </button>
+      {/* Logout Button */}
+      <button
+        type="button"
+        onClick={handledelete}
+        className="uppercase bg-red-700 p-3 rounded-lg hover:opacity-80 cursor-pointer transition duration-300"
+      >
+        Logout
+      </button>
+      {/* Success Message */}
+      {success && (
+        <p className="text-lg font-semibold text-center text-green-300">
+          Updated successfully...
+        </p>
+      )}
+      {/* Error Message */}
+      {error && (
+        <p className="text-sm font-semibold text-center text-red-300">
+          {error}
+        </p>
+      )}
+    </form>
+  </div>
+  
   );
 }

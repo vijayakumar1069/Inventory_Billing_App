@@ -63,8 +63,8 @@ const getProducts = async (req, res, next) => {
 };
 const editProduct = async (req, res, next) => {
   try {
-    console.log("id:::::", req.params.id);
-    const product = await PRODUCT.findById(req.params.id);
+    console.log("productID:::::", req.params.id);
+    const product = await PRODUCT.findOne({ productID: req.params.id });
     if (!product) {
       return next(errorHandler(404, "Product not found"));
     }
@@ -73,6 +73,7 @@ const editProduct = async (req, res, next) => {
     next(error);
   }
 };
+
 const editproductdone = async (req, res, next) => {
   try {
     console.log(req.params.id);

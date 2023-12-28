@@ -14,6 +14,7 @@ export default function AddProduct() {
     productprice: 0,
   });
   const [error, setError] = useState(false);
+
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -31,7 +32,6 @@ export default function AddProduct() {
     };
     fetching();
   }, [currentUser._id]);
-  console.log(prevProducts);
 
   const handlechange = (e) => {
     setFormdata({
@@ -39,13 +39,14 @@ export default function AddProduct() {
       [e.target.id]: e.target.value,
     });
   };
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch(`/api/products/addproduct/${currentUser._id}`, {
         method: "POST",
         headers: {
-          "content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formdata),
       });
@@ -58,9 +59,10 @@ export default function AddProduct() {
       setError(false);
       setPrevProducts([data, ...prevProducts]);
     } catch (error) {
-      setError(data.message);
+      setError(error.message);
     }
   };
+
   const handleDelete = async (id) => {
     try {
       const res = await fetch(`/api/products/deleteproduct/${id}`, {
@@ -71,95 +73,98 @@ export default function AddProduct() {
         console.log(data.message);
       }
 
-      setPrevProducts(prevProducts.filter((product) => product._id != id));
+      setPrevProducts(prevProducts.filter((product) => product._id !== id));
       console.log(data);
     } catch (error) {
       console.log(error.message);
     }
   };
+
   return (
-    <div className=" ">
-      <div className="mx-5 my-5 p-3 flex flex-col items-center ">
-        <h1 className="text-2xl font-semibold text-slate-800">
+    <div className="min-h-screen bg-gray-100">
+      <div className="mx-5 my-5 p-3 flex flex-col items-center bg-white shadow-lg rounded-md">
+        <h1 className="text-3xl font-bold text-gray-800 mb-5">
           Add Your Products
         </h1>
         <form
-          className="flex flex-col gap-5 w-full sm:w-4/5 py-5  "
+          className="flex flex-col gap-5 w-full sm:w-4/5 py-5 "
           onSubmit={handlesubmit}
         >
           <input
             type="number"
-            placeholder="Producr ID"
+            placeholder="Product ID"
             id="productID"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
           />
           {error && (
-            <p className="text-center font-2xl font-semibold text-red-700">{error}</p>
+            <p className="text-center text-2xl font-semibold text-red-700">
+              {error}
+            </p>
           )}
           <input
             type="text"
             placeholder="Product Name"
             id="productname"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
           <input
             type="text"
-            placeholder="Product category"
+            placeholder="Product Category"
             id="productcategory"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
           <input
             type="number"
-            placeholder="Product price"
+            placeholder="Product Price"
             id="productprice"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
           <input
             type="number"
             min={1}
+            placeholder="Product Quantity"
             id="productquantity"
-            placeholder="productquantity"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
           />
           <input
             type="number"
             min={1}
+            placeholder="Initial Product Quantity"
             id="initailquantity"
-            placeholder=" Initial productquantity "
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
           />
           <input
             type="text"
-            placeholder="Prduct description"
+            placeholder="Product Description"
             id="productdescription"
-            className="p-3 border rounded-lg "
+            className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
-          <button className="p-3 border uppercase text-xl font-semibold  hover:opacity-75 bg-blue-600 rounded-lg">
+          <button className="p-3 border uppercase text-xl font-semibold bg-blue-600 rounded-lg hover:opacity-75 text-white transition duration-300">
             ADD
           </button>
         </form>
       </div>
+
       {prevProducts.length > 0 && (
-        <div className="max-w-5xl mx-auto overflow-x-auto p-3">
-          <table className="table-auto w-full border-collapse border border-yellow-400">
+        <div className="max-w-5xl mx-auto overflow-x-auto p-3 mt-5">
+          <table className="w-full border-collapse border border-yellow-400">
             <thead>
               <tr className="bg-blue-500 text-white font-semibold">
-                <th className="py-2 px-4 border-r border-b">Id</th>
+                <th className="py-2 px-4 border-r border-b">ID</th>
                 <th className="py-2 px-4 border-r border-b">Name</th>
                 <th className="py-2 px-4 border-r border-b">Quantity</th>
                 <th className="py-2 px-4 border-r border-b">Price</th>
                 <th className="py-2 px-4 border-r border-b">Category</th>
-
                 <th className="py-2 px-4 border-b">Action</th>
               </tr>
             </thead>
@@ -167,7 +172,7 @@ export default function AddProduct() {
               {prevProducts.map((product) => (
                 <tr
                   key={product._id}
-                  className="text-center border-b border-black hover:bg-purple-300 "
+                  className="text-center border-b border-black hover:bg-purple-300"
                 >
                   <td className="py-2 px-4 border-r">{product.productID}</td>
                   <td className="py-2 px-4 border-r">{product.productname}</td>
@@ -175,7 +180,6 @@ export default function AddProduct() {
                     {product.productquantity}
                   </td>
                   <td className="py-2 px-4 border-r">{product.productprice}</td>
-
                   <td className="py-2 px-4 border-r">
                     {product.productcategory}
                   </td>
@@ -185,9 +189,8 @@ export default function AddProduct() {
                         to={`/editproduct/${product._id}`}
                         className="p-3 border bg-stone-500 rounded-lg font-semibold text-white hover:opacity-80 "
                       >
-                        <button>Edit</button>
+                        Edit
                       </Link>
-
                       <button
                         className="p-3 border bg-red-500 rounded-lg font-semibold text-white hover:opacity-80"
                         onClick={() => handleDelete(product._id)}

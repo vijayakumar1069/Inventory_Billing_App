@@ -72,66 +72,71 @@ export const UpdateExistingInvoiceProductDetails = () => {
     } catch (error) {}
   };
   return (
-    <div className="flex flex-col items-center ">
-      <h1 className="font-bold text-2xl text-center my-5 p-2">
-        Your Product Details
-      </h1>
-      <div className="flex flex-col gap-y-5 w-[370px]  sm:w-1/2">
-        <div className="flex gap-x-5 items-center p-3 ">
-          <label className="w-40 p-3 font-semibold">Product : </label>
-          <input
-            type="text"
-            placeholder="product Name"
-            value={prevProductsDetails.productname}
-            className="p-3 rounded-lg border w-full "
-          />
-        </div>
-        <div className="flex gap-x-5 items-center p-3  ">
-          <label className="w-40 p-3 font-semibold"> description:</label>
-          <input
-            type="text"
-            placeholder="product description"
-            value={prevProductsDetails.productdescription}
-            className="p-3 rounded-lg border w-full"
-          />
-        </div>
-        <div className="flex gap-x-5 items-center p-3 ">
-          <label className="w-40 p-3 font-semibold"> Qauntity : </label>
-          <input
-            type="Number"
-            placeholder="product quantity"
-            value={prevProductsDetails.productquantity}
-            className="p-3 rounded-lg border w-full"
-            onChange={(e) =>
-              setPrevProductDetails({
-                ...prevProductsDetails,
-                productquantity: e.target.value,
-              })
-            }
-          />
-          
-        </div>
-        {error && (
-            <p className="text-center text-red-600 font-semibold  uppercase">
-              {error}
-            </p>
-          )}
-        <div className="flex gap-x-5 items-center p-3 ">
-          <label className="w-40 p-3 font-semibold"> Price : </label>
-          <input
-            type="text"
-            placeholder="product price"
-            value={prevProductsDetails.productprice}
-            className="p-3 rounded-lg border w-full"
-          />
-        </div>
-        <button
-          onClick={handlesubmit}
-          className="p-3 border  mx-2 w-full    bg-slate-800 font-semibold text-white uppercase rounded-lg text-center "
-        >
-          Update
-        </button>
-      </div>
+    <div className="flex flex-col items-center">
+  <h1 className="font-bold text-2xl text-center my-5 p-2">
+    Your Product Details
+  </h1>
+  <div className="flex flex-col gap-y-5 w-[370px] sm:w-1/2">
+    {/* Product Name */}
+    <div className="flex gap-x-5 items-center p-3">
+      <label className="w-40 p-3 font-semibold">Product:</label>
+      <input
+        type="text"
+        placeholder="Product Name"
+        value={prevProductsDetails.productname}
+        className="p-3 rounded-lg border w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+      />
     </div>
+    {/* Product Description */}
+    <div className="flex gap-x-5 items-center p-3">
+      <label className="w-40 p-3 font-semibold">Description:</label>
+      <input
+        type="text"
+        placeholder="Product Description"
+        value={prevProductsDetails.productdescription}
+        className="p-3 rounded-lg border w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+      />
+    </div>
+    {/* Product Quantity */}
+    <div className="flex gap-x-5 items-center p-3">
+      <label className="w-40 p-3 font-semibold">Quantity:</label>
+      <input
+        type="Number"
+        placeholder="Product Quantity"
+        value={prevProductsDetails.productquantity}
+        className="p-3 rounded-lg border w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+        onChange={(e) =>
+          setPrevProductDetails({
+            ...prevProductsDetails,
+            productquantity: e.target.value,
+          })
+        }
+      />
+    </div>
+    {error && (
+      <p className="text-center text-red-600 font-semibold uppercase">
+        {error}
+      </p>
+    )}
+    {/* Product Price */}
+    <div className="flex gap-x-5 items-center p-3">
+      <label className="w-40 p-3 font-semibold">Price:</label>
+      <input
+        type="text"
+        placeholder="Product Price"
+        value={prevProductsDetails.productprice}
+        className="p-3 rounded-lg border w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+      />
+    </div>
+    {/* Update Button */}
+    <button
+      onClick={handlesubmit}
+      className="p-3 border mx-2 w-full bg-slate-800 font-semibold text-white uppercase rounded-lg text-center hover:bg-slate-900 shadow-md transition duration-300"
+    >
+      Update
+    </button>
+  </div>
+</div>
+
   );
 };

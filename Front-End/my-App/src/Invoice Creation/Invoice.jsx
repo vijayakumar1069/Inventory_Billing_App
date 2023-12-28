@@ -26,6 +26,7 @@ export default function Invoice() {
   });
   const [error, setError] = useState(false);
   const [prevProducts, setPrevProducts] = useState([]);
+
   const handlesearchProductID = async () => {
     try {
       const res = await fetch(
@@ -34,25 +35,26 @@ export default function Invoice() {
       const data = await res.json();
       if (data.success === false) {
         setError(data.message);
-
         return;
       }
       setError(false);
-
       setCurrentProduct({ ...data, productquantity: 1 });
     } catch (error) {
       setError(error.message);
     }
   };
+
   const handlechange = (e) => {
     setCurrentProduct({ ...currentproduct, [e.target.id]: e.target.value });
   };
+
   const handlecustomerchange = (e) => {
     setCurrentCustomer({
       ...currentCustomer,
       [e.target.id]: e.target.value,
     });
   };
+
   const handlesearchCustomerID = async () => {
     try {
       const res = await fetch(
@@ -69,13 +71,13 @@ export default function Invoice() {
       console.log(error);
     }
   };
+
   const hanldeaddmore = () => {
     if (currentproduct.productID === 0) {
       return setError("Enter Correct product ID");
     }
 
     setPrevProducts((prev) => [currentproduct, ...prev]);
-    // This code will be executed after the state is updated
     setCurrentProduct({
       productID: 0,
       productname: "",
@@ -86,7 +88,6 @@ export default function Invoice() {
     });
   };
 
-  // Function to calculate total price
   const calculateTotalPrice = () => {
     const updatedTotalPrice =
       currentproduct.productquantity * currentproduct.productprice +
@@ -97,12 +98,10 @@ export default function Invoice() {
     setTotalPrice(updatedTotalPrice);
   };
 
-  // Function to calculate GST amount
   const calculateGstfortotalprice = () => {
     setGstfortotalprice(totalprice * (18 / 100));
   };
 
-  // Function to calculate total amount with GST
   const calculateToalamountwithgst = () => {
     const totalAmountWithGst = totalprice + gstfortotalprice;
     setToalamountwithgst(totalAmountWithGst);
@@ -115,6 +114,7 @@ export default function Invoice() {
     calculateGstfortotalprice();
     calculateToalamountwithgst();
   }, [currentproduct, prevProducts, totalprice]);
+
   const handlesubmit = async (e) => {
     e.preventDefault();
 
@@ -159,9 +159,7 @@ export default function Invoice() {
       });
       setCurrentCustomer({ customerID: 0, name: "", email: "", address: "" });
       setPrevProducts([]);
-
       setError(false);
-
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -171,81 +169,82 @@ export default function Invoice() {
   };
 
   return (
-    <div>
-      <h1 className="font-bold text-2xl text-center my-4 px-3">
-        Create your Invoice{" "}
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center my-4">
+        Create your Invoice
       </h1>
-      <div className=" flex flex-col gap-4 flex-wrap ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
         <div className="flex flex-col gap-5">
-          <div className=" flex gap-5 items-center">
-            <label className="font-semibold w-32"> Product ID :</label>
-            <input
-              type="number"
-              id="productID"
-              placeholder="enter productID"
-              className="rounded-lg p-3 border "
-              onChange={handlechange}
-              value={currentproduct.productID}
-            />
-            <FaSearch size={25} onClick={handlesearchProductID} />
+          <div className="flex items-center gap-2">
+            <label className="w-32 font-semibold">Product ID </label>
+            <div className="flex items-center gap-5">
+              <input
+                type="number"
+                id="productID"
+                placeholder="Enter product ID"
+                className="rounded-lg p-3 border w-full"
+                onChange={handlechange}
+                value={currentproduct.productID}
+              />
+              <FaSearch
+                size={35}
+                onClick={handlesearchProductID}
+                className="cursor-pointer"
+              />
+            </div>
           </div>
 
-          {error && (
-            <p className=" p-2  font-semibold  text-red-700">{error}</p>
-          )}
+          {error && <p className="p-2 font-semibold text-red-700">{error}</p>}
         </div>
-        <div className="flex gap-5 items-center  ">
-          <label className="font-semibold w-32">Product Name :</label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Product Name</label>
           <input
             onChange={handlechange}
-            className="rounded-lg p-3 border w-full  "
+            className="rounded-lg p-3 border w-full"
             type="text"
             id="productname"
-            placeholder="enter Product Name"
+            placeholder="Enter Product Name"
             value={currentproduct.productname}
           />
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32"> Description :</label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Description </label>
           <input
             onChange={handlechange}
-            className="rounded-lg p-3 border w-full  "
+            className="rounded-lg p-3 border w-full"
             type="text"
             id="productdescription"
-            placeholder="enter productDescription"
+            placeholder="Enter Product Description"
             value={currentproduct.productdescription}
           />
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32">category :</label>
-
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Category </label>
           <input
-            className="rounded-lg p-3 border w-full "
+            className="rounded-lg p-3 border w-full"
             type="text"
             id="productcategory"
             value={currentproduct.productcategory}
-            placeholder="enter product Category"
+            placeholder="Enter Product Category"
           />
         </div>
-
-        <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32 ">quantity : </label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Quantity </label>
           <input
             onChange={handlechange}
-            className="rounded-lg p-3 border w-full  "
+            className="rounded-lg p-3 border w-full"
             type="number"
             id="productquantity"
             required
-            placeholder="Numbere of Quantities "
+            placeholder="Number of Quantities"
             value={currentproduct.productquantity}
           />
         </div>
-
-        <div className="flex gap-4 items-center ">
-          <label className="font-semibold w-32">Price :</label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Price </label>
           <input
             onChange={handlechange}
-            className="rounded-lg p-3 border w-full "
+            className="rounded-lg p-3 border w-full"
             type="number"
             id="productprice"
             placeholder="Product Price"
@@ -260,127 +259,133 @@ export default function Invoice() {
         >
           Add More Products...
         </button>
-        <div className="flex flex-col gap-4 flex-wrap bg-rose-300">
-          {prevProducts.length > 0 && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-collapse border-black">
-                <thead>
-                  <tr>
-                    <th className="py-2">Product ID</th>
-                    <th className="py-2">Name</th>
-                    <th className="py-2">Category</th>
-                    <th className="py-2">Quantity</th>
-                    <th className="py-2">Price/Product</th>
-                    <th className="py-2">Total Price </th>
-                  </tr>
-                </thead>
+      </div>
 
-                <tbody>
-                  {prevProducts.map(
-                    (product, index) =>
-                      // Add a condition to check if the product is not empty
-                      product.productID !== 0 && (
-                        <tr key={index}>
-                          <td className="py-2 text-center">
-                            {product.productID}
-                          </td>
-                          <td className="py-2  text-center">
-                            {product.productname}
-                          </td>
-                          <td className="py-2 text-center">
-                            {product.productcategory}
-                          </td>
-                          <td className="py-2 text-center">
-                            {product.productquantity}
-                          </td>
-                          <td className="py-2 text-center">
-                            {product.productprice}
-                          </td>
-                          <td className="py-2 text-center">
-                            {product.productprice * product.productquantity}
-                          </td>
-                        </tr>
-                      )
-                  )}
-                </tbody>
-              </table>
-              <div className="flex  mt-4 flex-col ">
-                <div className="text-right flex flex-col gap-6 ">
-                  <div className="mb-2 flex justify-between">
-                    <h3 className="font-semibold">Total Amount - </h3>
-                    <p>{totalprice}</p>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <h3 className="font-semibold">GST % -</h3>
-                    <p>{gstfortotalprice}</p>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <h3 className="font-semibold">Amount need to Pay - </h3>
-                    <p>{toalamountwithgst}</p>
-                  </div>
+      <div className="mt-6 p-4">
+        {prevProducts.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-collapse border-black">
+              <thead>
+                <tr>
+                  <th className="py-2">Product ID</th>
+                  <th className="py-2">Name</th>
+                  <th className="py-2">Category</th>
+                  <th className="py-2">Quantity</th>
+                  <th className="py-2">Price/Product</th>
+                  <th className="py-2">Total Price </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {prevProducts.map(
+                  (product, index) =>
+                    // Add a condition to check if the product is not empty
+                    product.productID !== 0 && (
+                      <tr key={index}>
+                        <td className="py-2 text-center">
+                          {product.productID}
+                        </td>
+                        <td className="py-2 text-center">
+                          {product.productname}
+                        </td>
+                        <td className="py-2 text-center">
+                          {product.productcategory}
+                        </td>
+                        <td className="py-2 text-center">
+                          {product.productquantity}
+                        </td>
+                        <td className="py-2 text-center">
+                          {product.productprice}
+                        </td>
+                        <td className="py-2 text-center">
+                          {product.productprice * product.productquantity}
+                        </td>
+                      </tr>
+                    )
+                )}
+              </tbody>
+            </table>
+            <div className="flex mt-4 flex-col ">
+              <div className="text-right flex flex-col gap-6 ">
+                <div className="mb-2 flex justify-between">
+                  <h3 className="font-semibold">Total Amount - </h3>
+                  <p>{totalprice}</p>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <h3 className="font-semibold">GST % -</h3>
+                  <p>{gstfortotalprice}</p>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <h3 className="font-semibold">Amount need to Pay - </h3>
+                  <p>{toalamountwithgst}</p>
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+
       <h1 className="text-2xl text-center font-bold my-3 p-2">
-        customer Details
+        Customer Details
       </h1>
-      <div className="flex flex-col gap-4 ">
-        <div className="flex gap-4 items-center">
-          <label className="font-semibold w-32"> CustomerID : </label>
-          <div className="flex gap-5 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div className="flex items-center gap-4">
+          <label className="font-semibold w-32"> Customer ID </label>
+          <div className="flex items-center gap-5">
             <input
               type="text"
               id="customerID"
-              className="rounded-lg p-3 border w-full "
+              className="rounded-lg p-3 border w-full"
               placeholder="Enter Customer ID"
               value={currentCustomer.customerID}
               onChange={handlecustomerchange}
             />
-            <FaSearch size={25} onClick={handlesearchCustomerID} />
+            <FaSearch
+              size={35}
+              onClick={handlesearchCustomerID}
+              className="cursor-pointer"
+            />
           </div>
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32">Name : </label>
+        <div className="flex items-center gap-5">
+          <label className="font-semibold w-32">Name </label>
           <input
             type="text"
             id="name"
-            className="rounded-lg p-3 border w-full "
+            className="rounded-lg p-3 border w-full"
             placeholder="Enter Customer name"
             value={currentCustomer.name}
             onChange={handlecustomerchange}
           />
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="w-32 font-semibold">Email : </label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Email </label>
           <input
             type="email"
             id="email"
-            className="rounded-lg p-3 border w-full "
+            className="rounded-lg p-3 border w-full"
             placeholder="Enter Customer email"
             onChange={handlecustomerchange}
             value={currentCustomer.email}
           />
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="w-32 font-semibold">Address : </label>
+        <div className="flex items-center gap-5">
+          <label className="w-32 font-semibold">Address </label>
           <input
             type="text"
             id="address"
-            className="rounded-lg p-3 border w-full "
+            className="rounded-lg p-3 border w-full"
             placeholder="Enter Customer address"
             onChange={handlecustomerchange}
             value={currentCustomer.address}
           />
         </div>
-        <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32 ">Due Date : </label>
+        <div className="flex items-center gap-5">
+          <label className="font-semibold w-32">Due Date </label>
           <input
             type="date"
             id="date"
-            className="rounded-lg w-full p-3 border "
+            className="rounded-lg p-3 border w-full"
             required
             onChange={(e) => {
               setDate(e.target.value);
@@ -388,19 +393,20 @@ export default function Invoice() {
           />
         </div>
       </div>
+
       <button
         disabled={loading}
         onClick={handlesubmit}
-        className="p-3 border w-full uppercase text-white font-semibold my-4 bg-green-700 hover:opacity-75 rounded-lg  "
+        className="p-3 border w-full uppercase text-white font-semibold my-4 bg-green-700 hover:opacity-75 rounded-lg transform transition-transform duration-300 hover:scale-105"
       >
         {loading ? "CREATING...." : "CREATE INVOICE"}
       </button>
       {success && (
         <p className="text-green-700 text-center font-semibold">{success}</p>
       )}
-      {/* {error && (
+      {error && (
         <p className="text-red-700 text-center font-semibold">{error}</p>
-      )} */}
+      )}
     </div>
   );
 }

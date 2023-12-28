@@ -43,58 +43,65 @@ export default function Login() {
     }
   };
   return (
-    <div className="flex flex-col max-w-sm mt-20 md:mt-28 p-3 mx-auto md:max-w-2xl lg:max-w-3xl rounded-lg ">
-      <div className="bg-gray-950 text-white p-3 text-center rounded-lg text-2xl">
-        <h1>
-          Welcome to{" "}
-          <span className="text-orange-600 font-semibold">
-            VIJAY's Billing App
-          </span>
-        </h1>
+    <div className="flex flex-col max-w-sm mt-20 md:mt-28 p-3 mx-auto md:max-w-2xl lg:max-w-3xl rounded-lg">
+    <div className="bg-gray-950 text-white p-3 text-center rounded-lg text-2xl">
+      <h1>
+        Welcome to{" "}
+        <span className="text-orange-600 font-semibold">
+          VIJAY's Billing App
+        </span>
+      </h1>
+    </div>
+    <div className="flex flex-col mt-10 p-5 gap-5 bg-purple-100 shadow-md md:shadow-lg lg:shadow-2xl rounded-t-xl md:flex-row">
+      <div className="md:w-1/2 p-3">
+        <img
+          className="w-full h-full rounded-lg"
+          src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"
+          alt="Login image"
+        />
       </div>
-      <div className="flex flex-col mt-10 p-5 gap-5 bg-purple-100 shadow-md md:shadow-lg lg:shadow-2xl rounded-t-xl md:flex-row ">
-        <div className="md:w-1/2  p-3">
-          <img
-            className="w-full h-full rounded-lg   "
-            src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"
-            alt="Login image"
+      <div className="md:border-r-2 md:border-pink-700"></div>
+      <div className="h-full">
+        <form className="flex flex-col gap-6" onSubmit={handlesubmit}>
+          {/* Email Input */}
+          <input
+            type="email"
+            placeholder="Email"
+            id="email"
+            className="border p-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+            onChange={handlechange}
           />
-        </div>
-        <div className="md:border-r-2  md:border-pink-700"></div>
-        <div className="h-full">
-          <form className="flex flex-col gap-6  " onSubmit={handlesubmit}>
-            <input
-              type="email"
-              placeholder="email"
-              id="email"
-              className="boder p-3 rounded-lg "
-              onChange={handlechange}
-            />
-            <input
-              type="password"
-              placeholder="password"
-              id="password"
-              className="boder p-3 rounded-lg "
-              onChange={handlechange}
-            />
-            <button className="bg-blue-800 p-3 rounded-lg uppercase text-white hover:opacity-80">
-              Login
-            </button>
-            {error && (
-              <p className="text-center font-semibold text-sm text-red-800">
-                {error}
-              </p>
-            )}
-
-            <p>
-              if you don't have account{" "}
-              <Link to="/">
-                <span className="font-semibold text-red-800 ">SIGN UP </span>
-              </Link>{" "}
+          {/* Password Input */}
+          <input
+            type="password"
+            placeholder="Password"
+            id="password"
+            className="border p-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
+            onChange={handlechange}
+          />
+          {/* Login Button */}
+          <button className="bg-blue-800 p-3 rounded-lg uppercase text-white hover:opacity-80 transition duration-300">
+            Login
+          </button>
+          {/* Error Message */}
+          {error && (
+            <p className="text-center font-semibold text-sm text-red-800">
+              {error}
             </p>
-          </form>
-        </div>
+          )}
+          {/* Sign Up Link */}
+          <p className="text-center">
+            If you don't have an account{" "}
+            <Link to="/">
+              <span className="font-semibold text-red-800 hover:underline">
+                SIGN UP
+              </span>
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
+  </div>
+  
   );
 }
