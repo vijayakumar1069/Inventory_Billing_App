@@ -71,7 +71,7 @@ const getdashboarddetails = async (req, res, next) => {
       },
       { $sort: { totalQuantity: -1 } },
       {
-        $limit: 2,
+        $limit: 3,
       },
     ]);
     const topInvoices = await INVOICE.aggregate([
