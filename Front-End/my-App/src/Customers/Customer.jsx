@@ -38,11 +38,14 @@ export default function Customer() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("/api/customers/addcustomer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formdata),
-      });
+      const res = await fetch(
+        `/api/customers/addcustomer/${currentUser._id}  `,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formdata),
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         console.log(data.message);
@@ -78,7 +81,10 @@ export default function Customer() {
         <h1 className="text-3xl p-3 font-semibold text-center">
           Customer Details
         </h1>
-        <form className="flex flex-col gap-5 w-full flex-1" onSubmit={handlesubmit}>
+        <form
+          className="flex flex-col gap-5 w-full flex-1"
+          onSubmit={handlesubmit}
+        >
           <input
             type="number"
             id="customerID"
@@ -126,10 +132,16 @@ export default function Customer() {
           <table className="table-auto w-full border-collapse border">
             <thead>
               <tr className="bg-blue-500 text-white font-semibold">
-                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">Id</th>
+                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">
+                  Id
+                </th>
                 <th className="py-2 px-4 border-r border-b">Name</th>
-                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">Email</th>
-                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">Address</th>
+                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">
+                  Email
+                </th>
+                <th className="py-2 px-4 border-r border-b hidden sm:table-cell">
+                  Address
+                </th>
                 <th className="py-2 px-4 border-r border-b">Total Orders</th>
                 <th className="py-2 px-4 border-b">Action</th>
               </tr>
@@ -140,10 +152,16 @@ export default function Customer() {
                   key={cus._id}
                   className="text-center border-b border-black  hover:bg-[#FFDFDF] hover:scale-105 transition duration-300 sm:table-row"
                 >
-                  <td className="py-2 px-4 border-r hidden sm:table-cell">{cus.customerID}</td>
+                  <td className="py-2 px-4 border-r hidden sm:table-cell">
+                    {cus.customerID}
+                  </td>
                   <td className="py-2 px-4 border-r">{cus.name}</td>
-                  <td className="py-2 px-4 border-r hidden sm:table-cell">{cus.email}</td>
-                  <td className="py-2 px-4 border-r hidden sm:table-cell">{cus.address}</td>
+                  <td className="py-2 px-4 border-r hidden sm:table-cell">
+                    {cus.email}
+                  </td>
+                  <td className="py-2 px-4 border-r hidden sm:table-cell">
+                    {cus.address}
+                  </td>
                   <td className="py-2 px-4 border-r">
                     {cus.previouslyOrderedProducts.length}
                   </td>
@@ -169,7 +187,9 @@ export default function Customer() {
           </table>
         </div>
       ) : (
-        <p className="text-center mt-6 font-semibold">No customer is created </p>
+        <p className="text-center mt-6 font-semibold">
+          No customer is created{" "}
+        </p>
       )}
     </div>
   );

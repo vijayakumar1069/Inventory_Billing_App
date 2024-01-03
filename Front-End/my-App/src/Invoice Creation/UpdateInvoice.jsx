@@ -238,7 +238,7 @@ export const UpdateInvoice = () => {
         </div>
 
         {/* Update Button */}
-        <button className="p-3 border bg-[#001524] text-white uppercase rounded-lg w-full font-semibold hover:bg-[#22668D] ">
+        <button onClick={handlesubmit} className="p-3 border bg-[#001524] text-white uppercase rounded-lg w-full font-semibold hover:bg-[#22668D] ">
           Update
         </button>
 

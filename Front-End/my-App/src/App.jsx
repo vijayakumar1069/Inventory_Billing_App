@@ -18,6 +18,10 @@ import InvoiceDetails from "./Invoice Details/InvoiceDetails";
 import { UpdateInvoice } from "./Invoice Creation/UpdateInvoice";
 import { AddProductToInvoiceInUpdatePage } from "./Invoice Details/AddProductToInvoiceInUpdatePage";
 import { UpdateExistingInvoiceProductDetails } from "./Invoice Creation/UpdateExistingInvoiceProductDetails";
+import Navbar from "./Landing page/Navbar";
+import ResetPassword from "./pages/ResetPassword";
+import NewPassword from "./pages/NewPassword";
+import VerifySignup from "./pages/VerifySignup";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -29,7 +33,7 @@ function App() {
           <Route path="/" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/update" element={<Update />} />
+            <Route path="/update/" element={<Update />} />
           </Route>
           <Route path="/editproduct/:id" element={<Editproduct />} />
           <Route path="/editcustomer/:id" element={<Editcustomer />} />
@@ -38,6 +42,12 @@ function App() {
             path="/addproduct/:id"
             element={<AddProductToInvoiceInUpdatePage />}
           />
+          <Route
+            path="/reset-password/:userId/:token"
+            element={<NewPassword />}
+          />
+          <Route path="/verify/:id/:token" element={<VerifySignup />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/updateinvoiceexistingproductquantity/:id"
             element={<UpdateExistingInvoiceProductDetails />}

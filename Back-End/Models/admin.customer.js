@@ -21,6 +21,11 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
     previouslyOrderedProducts: [
       {
         type: mongoose.Schema.Types.ObjectId,

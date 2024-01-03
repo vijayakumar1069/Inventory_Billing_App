@@ -1,18 +1,21 @@
+const mongoose = require("mongoose");
 const INVOICE = require("../Models/admin.invoice.model");
 const PRODUCT = require("../Models/admin.products");
 const CUSTOMER = require("../Models/admin.customer");
 const errorHandler = require("../Utils/errorHandler");
 const getdashboarddetails = async (req, res, next) => {
   try {
-    const product = await PRODUCT.find();
+    const product = await PRODUCT.find({ admin: req.params.id });
 
     const costoftotalproduct = product.reduce(
       (acc, pro) => acc + pro.productprice * pro.initailquantity,
       0
     );
-    const customer = await CUSTOMER.find();
+
+    const customer = await CUSTOMER.find({ admin: req.params.id });
     const totalcustomer = customer.length;
-    const invoices = await INVOICE.find();
+
+    const invoices = await INVOICE.find({ admin: req.params.id });
     const totalinvoicecost = invoices.reduce((acc, invoice) => {
       return (
         acc +
@@ -23,13 +26,16 @@ const getdashboarddetails = async (req, res, next) => {
         )
       );
     }, 0);
+
     const outofstockproducts = product.filter(
       (pro) => pro.productquantity == 0
     );
-
     const outofstock = outofstockproducts.length;
+
     const totalinvoices = invoices.length;
+
     const topProducts = await INVOICE.aggregate([
+      { $match: { admin: req.params.id } },
       { $unwind: "$products" },
       {
         $group: {
@@ -46,11 +52,11 @@ const getdashboarddetails = async (req, res, next) => {
         },
       },
       { $sort: { totalsales: -1 } },
-      {
-        $limit: 3,
-      },
+      { $limit: 3 },
     ]);
+
     const topCustomers = await CUSTOMER.aggregate([
+      { $match: { admin: req.params.id } },
       {
         $lookup: {
           from: "products",
@@ -59,9 +65,7 @@ const getdashboarddetails = async (req, res, next) => {
           as: "orderedproducts",
         },
       },
-      {
-        $unwind: "$orderedproducts",
-      },
+      { $unwind: "$orderedproducts" },
       {
         $group: {
           _id: "$_id",
@@ -70,11 +74,11 @@ const getdashboarddetails = async (req, res, next) => {
         },
       },
       { $sort: { totalQuantity: -1 } },
-      {
-        $limit: 3,
-      },
+      { $limit: 3 },
     ]);
+
     const topInvoices = await INVOICE.aggregate([
+      { $match: { admin: req.params.id } },
       { $unwind: "$products" },
       {
         $group: {
@@ -90,11 +94,10 @@ const getdashboarddetails = async (req, res, next) => {
           },
         },
       },
-      {
-        $sort: { totalCost: -1 },
-      },
+      { $sort: { totalCost: -1 } },
       { $limit: 3 },
     ]);
+
     res.status(200).json({
       costoftotalproduct,
       totalcustomer,

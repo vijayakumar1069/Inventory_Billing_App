@@ -42,10 +42,13 @@ const createInvoice = async (req, res, next) => {
     const duedate = format(parseISO(req.body.date), "yyyy/MM/dd");
     for (const product of req.body.prevProducts) {
       const quantitycheck = await PRODUCT.findOne({ _id: product._id });
-      console.log(product.productquantity)
+      console.log(product.productquantity);
       if (quantitycheck.productquantity < product.productquantity) {
         return next(
-          errorHandler(404, "Product qunatity  is lesser the your required quantity")
+          errorHandler(
+            404,
+            "Product qunatity  is lesser the your required quantity"
+          )
         );
       }
     }
@@ -57,6 +60,7 @@ const createInvoice = async (req, res, next) => {
       customer: req.body.currentCustomer,
 
       status: "Pending",
+      admin: req.params.id,
       dueDate: duedate.toString(), //
     });
 
@@ -93,6 +97,7 @@ const createInvoice = async (req, res, next) => {
 
 const getallInvoices = async (req, res, next) => {
   try {
+    console.log(req.params.id);
     // Extract filtering parameters from the request query
     const { invoiceNumber, issuedate, dueDate, status } = req.query;
 
@@ -124,7 +129,7 @@ const getallInvoices = async (req, res, next) => {
     // Fetch invoices based on the filter or return all invoices
     const invoices = Object.keys(filter).length
       ? await INVOICE.find(filter)
-      : await INVOICE.find();
+      : await INVOICE.find({ admin: req.params.id });
 
     res.status(200).json(invoices);
   } catch (error) {
@@ -168,6 +173,7 @@ const addproductstoexistinginvoice = async (req, res, next) => {
   res.status(200).json(currentInvoice);
 };
 const updateexistinginvoice = async (req, res, next) => {
+  console.log(req.body.formdata);
   try {
     const invoice = await INVOICE.findOne({ _id: req.params.id });
 

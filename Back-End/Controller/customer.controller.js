@@ -8,6 +8,7 @@ const INVOICE = require("../Models/admin.invoice.model.js");
 const addCustomer = async (req, res, next) => {
   try {
     const { customerID, name, email, address } = req.body;
+    console.log(req.params.id);
 
     const customer = await CUSTOMER.findOne({ customerID });
     if (customer) {
@@ -16,7 +17,13 @@ const addCustomer = async (req, res, next) => {
       if (!customerID || !name || !email || !address) {
         return next(errorHandler(404, "must fill all above values"));
       }
-      const newcustomer = new CUSTOMER({ customerID, name, email, address });
+      const newcustomer = new CUSTOMER({
+        customerID,
+        name,
+        email,
+        address,
+        admin: req.params.id,
+      });
       await newcustomer.save();
       res.status(200).json(newcustomer);
     }
@@ -29,7 +36,9 @@ const getallcustomer = async (req, res, next) => {
     if (req.params.id != req.user.id) {
       return next(errorHandler(404, "your not Authorized"));
     }
-    const customerDetails = await CUSTOMER.find().sort({ createdAt: -1 });
+    const customerDetails = await CUSTOMER.find({ admin: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(customerDetails);
   } catch (error) {
     next(error);
@@ -87,7 +96,10 @@ const deletecustomer = async (req, res, next) => {
 };
 
 const getcustomer = async (req, res, next) => {
-  const customer = await CUSTOMER.findOne({ customerID: req.params.id });
+  const customer = await CUSTOMER.findOne({
+    customerID: req.params.id,
+    admin: req.params.userid,
+  });
   if (!customer) {
     return next(errorHandler(404, "Customer not Found"));
   }

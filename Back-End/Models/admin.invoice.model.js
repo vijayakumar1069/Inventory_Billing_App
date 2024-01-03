@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Admin = require("./admin.model");
 const invoiceSchema = new mongoose.Schema(
   {
     invoiceNumber: {
@@ -14,7 +14,7 @@ const invoiceSchema = new mongoose.Schema(
     dueDate: {
       type: String,
     },
-   
+
     products: [
       {
         productname: String,
@@ -28,6 +28,11 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
       enum: ["Pending", "Paid", "Shipped", "Delivered"],
       default: "Pending",
+    },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
     },
   },
   { timestamps: true }

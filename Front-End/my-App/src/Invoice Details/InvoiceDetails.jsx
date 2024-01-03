@@ -1,8 +1,10 @@
 // InvoiceDetails.js
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function InvoiceDetails() {
+  const { currentUser } = useSelector((state) => state.admin);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -28,8 +30,9 @@ export default function InvoiceDetails() {
       window.history.replaceState({}, "", `?${params.toString()}`);
 
       const res = await fetch(
-        `/api/invoices/getallInvoices?${params.toString()}`
+        `/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`
       );
+
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
@@ -60,8 +63,9 @@ export default function InvoiceDetails() {
     window.history.replaceState({}, "", `?${params.toString()}`);
 
     const res = await fetch(
-      `/api/invoices/getallInvoices?${params.toString()}`
+      `/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`
     );
+
     const data = await res.json();
     console.log(data);
     if (data.success === false) {
@@ -156,7 +160,9 @@ export default function InvoiceDetails() {
       </form>
 
       {error && (
-        <p className="text-center font-semibold text-2xl text-red-500">{error}</p>
+        <p className="text-center font-semibold text-2xl text-red-500">
+          {error}
+        </p>
       )}
 
       <div className="p-4">
@@ -176,7 +182,10 @@ export default function InvoiceDetails() {
               </thead>
               <tbody>
                 {invoices.map((invoice, i) => (
-                  <tr key={i} className="hover:bg-[#F4EAE0] text-center hover:scale-105 transition duration-300">
+                  <tr
+                    key={i}
+                    className="hover:bg-[#F4EAE0] text-center hover:scale-105 transition duration-300"
+                  >
                     <td className="py-2 border-l border-r">
                       {invoice.invoiceNumber}
                     </td>
@@ -203,7 +212,9 @@ export default function InvoiceDetails() {
                     <td className="py-2 border-l border-r">
                       {invoice.issuedate}
                     </td>
-                    <td className="py-2 border-l border-r">{invoice.dueDate}</td>
+                    <td className="py-2 border-l border-r">
+                      {invoice.dueDate}
+                    </td>
                     <td className="py-2 border-l border-r">
                       <div className="flex p-2 items-center gap-2 justify-center">
                         <Link to={`/updateinvoice/${invoice._id}`}>

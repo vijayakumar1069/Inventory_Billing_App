@@ -13,8 +13,8 @@ const {
   deleteinvoice,
 } = require("../Controller/admin.invoice.controller");
 const router = express.Router();
-router.post("/createInvoice/", verifyAdmin, createInvoice);
-router.get("/getAllInvoices", verifyAdmin, getallInvoices);
+router.post("/createInvoice/:id", verifyAdmin, createInvoice);
+router.get("/getAllInvoices/:id", verifyAdmin, getallInvoices);
 router.get("/updateinvoice/:id", verifyAdmin, updateinvoice);
 router.get(
   "/getproductsforexistinginvoice/:id",

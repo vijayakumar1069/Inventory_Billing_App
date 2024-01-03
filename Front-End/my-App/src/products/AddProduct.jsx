@@ -155,7 +155,7 @@ export default function AddProduct() {
         </form>
       </div>
 
-      {prevProducts.length > 0 && (
+      {prevProducts.length > 0 ? (
         <div className="max-w-5xl mx-auto overflow-x-auto p-3 mt-5">
           <table className="w-full border-collapse border border-yellow-400">
             <thead>
@@ -204,6 +204,10 @@ export default function AddProduct() {
             </tbody>
           </table>
         </div>
+      ) : (
+        <p className="font-semibold text-xl text-center mt-6">
+          No Products Is Listed
+        </p>
       )}
     </div>
   );

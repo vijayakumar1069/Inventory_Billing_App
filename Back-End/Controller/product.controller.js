@@ -25,6 +25,7 @@ const addProduct = async (req, res, next) => {
       productquantity: req.body.productquantity,
       productprice: req.body.productprice,
       initailquantity: req.body.initailquantity,
+      admin: req.params.id,
     });
     await newproduct.save();
 
@@ -132,9 +133,12 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 const getProduct = async (req, res, next) => {
-  const product = await PRODUCT.findOne({ productID: req.params.id });
+  const product = await PRODUCT.findOne({
+    productID: req.params.id,
+    admin: req.params.userid,
+  });
   if (!product) {
-    return next(errorHandler(404, "Product not found"));
+    return next(errorHandler(404, "product not found"));
   }
 
   if (product.productquantity == 0 || product.productquantity < 0) {

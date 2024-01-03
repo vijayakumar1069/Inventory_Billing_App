@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const PRODUCT = require("./admin.products.js");
 
 const adminSchema = new mongoose.Schema(
   {
@@ -22,11 +21,18 @@ const adminSchema = new mongoose.Schema(
         ref: "PRODUCT",
       },
     ],
+    resetToken: String,
+    verificationToken: String,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
+
 const Admin = mongoose.model("Admin", adminSchema);
 
 module.exports = Admin;

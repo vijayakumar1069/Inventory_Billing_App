@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function Invoice() {
+  const { currentUser } = useSelector((state) => state.admin);
   const [currentproduct, setCurrentProduct] = useState({
     productID: 0,
     productname: "",
@@ -30,7 +32,7 @@ export default function Invoice() {
   const handlesearchProductID = async () => {
     try {
       const res = await fetch(
-        `/api/products/getproduct/${currentproduct.productID}`
+        `/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`
       );
       const data = await res.json();
       if (data.success === false) {
@@ -58,7 +60,7 @@ export default function Invoice() {
   const handlesearchCustomerID = async () => {
     try {
       const res = await fetch(
-        `/api/customers/getcustomer/${currentCustomer.customerID}`
+        `/api/customers/getcustomer/${currentCustomer.customerID}/${currentUser._id}`
       );
       const data = await res.json();
       if (data.success === false) {
@@ -117,6 +119,10 @@ export default function Invoice() {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+    if (date == null) {
+      setError("please provide a date");
+      return;
+    }
 
     if (currentproduct.productID !== 0) {
       prevProducts.push(currentproduct);
@@ -134,7 +140,7 @@ export default function Invoice() {
         currentCustomer,
         date,
       });
-      const res = await fetch("/api/invoices/createInvoice", {
+      const res = await fetch(`/api/invoices/createInvoice/${currentUser._id}`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",

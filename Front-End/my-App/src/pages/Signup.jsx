@@ -10,6 +10,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const[success, setSuccess] = useState(false);
 
   const handlechange = (e) => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
@@ -33,10 +34,11 @@ export default function Signup() {
         setLoading(false);
         return setError(data.message);
       }
+      setSuccess(data.result);
       setLoading(false);
       setError(false);
 
-      navigate("/dashboard");
+      
     } catch (error) {
       setError(error);
       setLoading(false);
@@ -93,6 +95,11 @@ export default function Signup() {
         {error && (
           <p className="text-red-800 p-2 text-center font-semibold">
             {error}
+          </p>
+        )}
+         {success && (
+          <p className="text-green-800 p-2 text-center font-semibold">
+            {success}
           </p>
         )}
         {/* Login Link */}

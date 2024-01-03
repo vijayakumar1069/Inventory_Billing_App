@@ -7,7 +7,7 @@ router.get("/getproducts/:id",verifyAdmin,getProducts)
 router.get("/editproduct/:id",verifyAdmin,editProduct)
 router.post("/editproductdone/:id",verifyAdmin,editproductdone)
 router.delete("/deleteproduct/:id",verifyAdmin,deleteProduct)
-router.get("/getproduct/:id",verifyAdmin,getProduct)
+router.get("/getproduct/:id/:userid",verifyAdmin,getProduct)
 
 
 

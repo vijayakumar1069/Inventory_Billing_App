@@ -8,20 +8,28 @@ import {
   FaCartPlus,
   FaCheck,
 } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
+  const { currentUser } = useSelector((state) => state.admin);
   const [details, setDetails] = useState({});
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch("/api/dashboard/getdashboarddetails");
-      const data = await res.json();
-      if (data.success === false) {
-        console.log(data.message);
+      try {
+        const res = await fetch(
+          `/api/dashboard/getdashboarddetails/${currentUser._id}`
+        );
+        const data = await res.json();
+        if (data.success === false) {
+          console.log(data.message);
+        }
+        setDetails(data);
+      } catch (error) {
+        console.error("Error fetching dashboard details:", error);
       }
-      setDetails(data);
     };
     fetching();
-  }, []);
+  }, [currentUser._id]);
 
   const pieChartData = {
     labels: details.topProducts
@@ -143,28 +151,40 @@ export default function Dashboard() {
 
       <div className="my-5">
         <h1 className="text-2xl font-bold mb-4">Top Selling Product</h1>
-        {details.topProducts && (
+        {details.topProducts && details.topProducts.length > 0 ? (
           <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieChartData} />
           </div>
+        ) : (
+          <p className="text-xl font-semibold text-[#000000]">
+            No data available for top-selling products.
+          </p>
         )}
       </div>
 
       <div className="my-5">
         <h1 className="text-2xl font-bold mb-4">Top Buying Customer</h1>
-        {details.topCustomers && (
+        {details.topCustomers && details.topCustomers.length > 0 ? (
           <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieCustomerChartData} />
           </div>
+        ) : (
+          <p className="text-xl font-semibold text-[#000000]">
+            No data available for top buying customers.
+          </p>
         )}
       </div>
 
       <div className="my-5">
         <h1 className="text-2xl font-bold mb-4">Top Invoices</h1>
-        {details.topInvoices && (
+        {details.topInvoices && details.topInvoices.length > 0 ? (
           <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieInvoiceChartData} />
           </div>
+        ) : (
+          <p className="text-xl font-semibold text-[#000000]">
+            No data available for top invoices.
+          </p>
         )}
       </div>
     </div>

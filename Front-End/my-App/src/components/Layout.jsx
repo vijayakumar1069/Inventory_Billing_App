@@ -11,11 +11,9 @@ const Layout = ({ children }) => {
       </div>
       <div className="flex flex-1">
         <div className="bg-white w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/6">
-   
           <Sidebar />
         </div>
-        <div className="flex-1 bg-gray-100 p-2 md:p-4 lg:p-6 xl:p-8">
-
+        <div className="flex-1 bg-white p-2 md:p-4 lg:p-6 xl:p-8">
           <Outlet />
         </div>
       </div>
