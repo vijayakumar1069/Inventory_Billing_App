@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
-    <div className="bg-gray-700 mt-10 rounded-lg p-4">
+    <div className="bg-[#092635]  rounded-lg p-4">
       <ul className="flex items-center justify-between">
         <Link to="/">
           <li>

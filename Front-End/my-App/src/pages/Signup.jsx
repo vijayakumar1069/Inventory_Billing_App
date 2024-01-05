@@ -45,7 +45,7 @@ export default function Signup() {
     }
   };
   return (
-    <div className="flex mt-20 p-10 max-w-sm sm:max-w-2xl lg:max-w-4xl flex-col mx-auto">
+    <div className="flex mt-36 md:mt-12 p-10 max-w-sm sm:max-w-2xl lg:max-w-4xl flex-col mx-auto">
     <div className="bg-slate-200 p-3">
       <h1 className="text-3xl text-center bg-violet-400 p-3 rounded-lg font-semibold">
         Welcome to <span className="text-dc2626">VIJAY'S Billing APP</span>
