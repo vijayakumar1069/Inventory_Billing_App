@@ -22,6 +22,10 @@ import Navbar from "./Landing page/Navbar";
 import ResetPassword from "./pages/ResetPassword";
 import NewPassword from "./pages/NewPassword";
 import VerifySignup from "./pages/VerifySignup";
+import { About } from "./Landing page/About";
+import { OurClients } from "./Landing page/OurClients";
+import ContactUs from "./Landing page/ContactUs";
+import Home from "./Landing page/Home";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -29,8 +33,15 @@ function App() {
   return (
     <>
       <Router>
+      <Navbar/>
+      <Home />
+      <About />
+      <OurClients />
+      <ContactUs/>
+      
         <Routes>
-          <Route path="/" element={<Signup />} />
+        
+          <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoute />}>
             <Route path="/update/" element={<Update />} />
