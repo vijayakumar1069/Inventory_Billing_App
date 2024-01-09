@@ -31,6 +31,7 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+<<<<<<< HEAD
   // Navbar.jsx
   const scrollToSection = (sectionId) => {
     console.log(`Scroll to ${sectionId}`);
@@ -43,6 +44,12 @@ const Navbar = () => {
       });
     } else {
       console.error("Element not found with ID:", sectionId);
+=======
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
     }
   };
 
@@ -60,6 +67,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-6">
           <ScrollLink
             to="home"
+<<<<<<< HEAD
             spy={true}
             smooth={true}
             duration={500}
@@ -68,10 +76,15 @@ const Navbar = () => {
               scrollToSection("home");
               closeMobileNav();
             }}
+=======
+            smooth={true}
+            className="text-white hover:text-gray-300 transition duration-300 px-4 py-2 rounded-md"
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
           >
             Home
           </ScrollLink>
           <ScrollLink
+<<<<<<< HEAD
             to="/about"
             spy={true}
             smooth={true}
@@ -81,11 +94,17 @@ const Navbar = () => {
               scrollToSection("about");
               closeMobileNav();
             }}
+=======
+            to="about"
+            smooth={true}
+            className="text-white hover:text-gray-300 transition duration-300 px-4 py-2 rounded-md"
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
           >
             About
           </ScrollLink>
           <ScrollLink
             to="our-clients"
+<<<<<<< HEAD
             spy={true}
             smooth={true}
             duration={500}
@@ -94,11 +113,16 @@ const Navbar = () => {
               scrollToSection("our-clients");
               closeMobileNav();
             }}
+=======
+            smooth={true}
+            className="text-white hover:text-gray-300 transition duration-300 px-4 py-2 rounded-md"
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
           >
             Our Clients
           </ScrollLink>
           <ScrollLink
             to="contact-us"
+<<<<<<< HEAD
             spy={true}
             smooth={true}
             duration={500}
@@ -111,6 +135,13 @@ const Navbar = () => {
             Contact Us
           </ScrollLink>
 
+=======
+            smooth={true}
+            className="text-white hover:text-gray-300 transition duration-300 px-4 py-2 rounded-md"
+          >
+            Contact Us
+          </ScrollLink>
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
           <div className="flex items-center space-x-4">
             <Link
               to="/login"
@@ -119,7 +150,11 @@ const Navbar = () => {
               Log In
             </Link>
             <Link
+<<<<<<< HEAD
               to="/signup"
+=======
+              to="/"
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full hover:shadow-md transition duration-300"
             >
               Sign Up

@@ -7,7 +7,11 @@ import { FaPlus, FaUsers, FaFileAlt, FaInfoCircle } from "react-icons/fa";
 
 export const About = () => {
   return (
+<<<<<<< HEAD
     <main className="mt-5" id="about">
+=======
+    <main className="mt-5 about " id="about">
+>>>>>>> fc851b02370beddf804d71e3eb2b1c76ffe52cc1
       <div className="text-white">
         <div className="font-extrabold text-center text-3xl mb-10">
           <h1>Explore Special Features Below </h1>
