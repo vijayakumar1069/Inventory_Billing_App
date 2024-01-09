@@ -65,6 +65,7 @@ export default function Invoice() {
       const data = await res.json();
       if (data.success === false) {
         setError(data.message);
+        return;
       }
       setError(false);
       setCurrentCustomer(data);
@@ -140,13 +141,16 @@ export default function Invoice() {
         currentCustomer,
         date,
       });
-      const res = await fetch(`/api/invoices/createInvoice/${currentUser._id}`, {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-        },
-        body: dataforserverside,
-      });
+      const res = await fetch(
+        `/api/invoices/createInvoice/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+          },
+          body: dataforserverside,
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         setError(data.message);
@@ -165,6 +169,7 @@ export default function Invoice() {
       });
       setCurrentCustomer({ customerID: 0, name: "", email: "", address: "" });
       setPrevProducts([]);
+      setDate(null);
       setError(false);
       console.log(data);
     } catch (error) {

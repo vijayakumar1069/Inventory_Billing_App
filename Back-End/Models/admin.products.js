@@ -4,7 +4,7 @@ const Admin = require("./admin.model");
 const productSchema = new mongoose.Schema(
   {
     productID: {
-      type: Number,
+      type: String,
       required: true,
     },
     productname: { type: String, required: true },

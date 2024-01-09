@@ -5,13 +5,22 @@ const { format, parseISO } = require("date-fns");
 const errorHandler = require("../Utils/errorHandler.js");
 const PRODUCT = require("../Models/admin.products.js");
 const CUSTOMER = require("../Models/admin.customer.js");
+const Admin=require("../Models/admin.model.js")
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "vijay.r20799@gmail.com",
+    pass: "cetr ghcn azyg wpgy",
+  },
+});
 
 const createInvoice = async (req, res, next) => {
   try {
     let existingInvoice;
     let newInvoiceNumber;
 
-    // Generate a unique invoice number based on last invoice number
+    // Generate a unique invoice number based on the last invoice number
     let lastInvoice = await INVOICE.findOne(
       {},
       {},
@@ -37,36 +46,67 @@ const createInvoice = async (req, res, next) => {
       }
     } while (existingInvoice);
 
-    // Create new invoice with unique invoice number
-    const currentdate = format(new Date(), "yyyy/MM/dd");
-    const duedate = format(parseISO(req.body.date), "yyyy/MM/dd");
+    // Create a new invoice with a unique invoice number
+    const currentDate = format(new Date(), "yyyy/MM/dd");
+    const dueDate = format(parseISO(req.body.date), "yyyy/MM/dd");
+    const addProductsToCustomer = await CUSTOMER.findOne({
+      _id: req.body.currentCustomer._id,
+    });
+
     for (const product of req.body.prevProducts) {
-      const quantitycheck = await PRODUCT.findOne({ _id: product._id });
+      addProductsToCustomer.previouslyOrderedProducts.push(product._id);
+    }
+    const adminemail = await Admin.findById(req.params.id);
+    console.log(adminemail)
+
+    for (const product of req.body.prevProducts) {
+      const quantityCheck = await PRODUCT.findOne({ _id: product._id });
       console.log(product.productquantity);
-      if (quantitycheck.productquantity < product.productquantity) {
+
+      if (quantityCheck.productquantity < product.productquantity) {
         return next(
           errorHandler(
             404,
-            "Product qunatity  is lesser the your required quantity"
+            "Product quantity is less than your required quantity"
           )
         );
+      }
+
+      if (quantityCheck.productquantity < 5) {
+        const addProductQuantityLink = `http://localhost:5173/editproduct/${quantityCheck._id}`;
+        const mailOptions = {
+          from: "vijay.r20799@gmail.com",
+          to: adminemail.email,
+          subject: "Product quantity is low",
+          text: `Click here to add product quantity ${addProductQuantityLink}`,
+        };
+
+        // Sending email inside the loop
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Error sending email:", error);
+            return res.status(500).json({ error: error.toString() });
+          }
+          console.log("Email sent:", info.response);
+          res.status(200).json({ result: "Verification email sent" });
+        });
       }
     }
 
     const newInvoice = new INVOICE({
       invoiceNumber: newInvoiceNumber,
-      issuedate: currentdate.toString(),
+      issuedate: currentDate.toString(),
       products: req.body.prevProducts,
       customer: req.body.currentCustomer,
-
       status: "Pending",
       admin: req.params.id,
-      dueDate: duedate.toString(), //
+      dueDate: dueDate.toString(),
     });
 
     await newInvoice.save();
+
     for (const product of req.body.prevProducts) {
-      const productquantitydecresing = await PRODUCT.findByIdAndUpdate(
+      const productQuantityDecreasing = await PRODUCT.findByIdAndUpdate(
         product._id,
         {
           $inc: {
@@ -79,15 +119,8 @@ const createInvoice = async (req, res, next) => {
       );
     }
 
-    const addproductstocustomer = await CUSTOMER.findOne({
-      _id: req.body.currentCustomer._id,
-    });
-    for (const product of req.body.prevProducts) {
-      addproductstocustomer.previouslyOrderedProducts.push(product._id);
-    }
-
-    addproductstocustomer.totalinvoice.push(newInvoice._id);
-    await addproductstocustomer.save();
+    addProductsToCustomer.totalinvoice.push(newInvoice._id);
+    await addProductsToCustomer.save();
 
     res.status(200).json({ newInvoice });
   } catch (error) {

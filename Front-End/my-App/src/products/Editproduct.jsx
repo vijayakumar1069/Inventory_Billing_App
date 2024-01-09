@@ -12,16 +12,17 @@ export default function EditProduct() {
   });
   const navigate = useNavigate();
   const params = useParams();
-  const id = params.id;
+
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`/api/products/editproduct/${id}`);
+      const res = await fetch(`/api/products/editproduct/${params.id}`);
       const data = await res.json();
       setFormdata(data);
     };
     fetching();
-  }, [id]);
+  }, [params.id]);
+  console.log(formdata)
 
   const handlechange = (e) => {
     setFormdata({
@@ -33,7 +34,7 @@ export default function EditProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/products/editproductdone/${id}`, {
+      const res = await fetch(`/api/products/editproductdone/${params.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formdata),
@@ -69,7 +70,7 @@ export default function EditProduct() {
             placeholder="Product ID"
             id="productID"
             className="p-3 border rounded-lg focus:outline-none"
-            inputMode="numeric"
+             inputMode="numeric"
             onChange={handlechange}
             value={formdata.productID}
           />

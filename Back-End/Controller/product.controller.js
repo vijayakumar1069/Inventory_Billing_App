@@ -8,13 +8,16 @@ const addProduct = async (req, res, next) => {
     if (req.user.id != req.params.id) {
       return next(errorHandler(404, "your not authorized to add product"));
     }
-    console.log(req.body);
+  
     const checkexistingproduct = await PRODUCT.findOne({
       productID: req.body.productID,
     });
-    console.log(checkexistingproduct);
+ 
     if (checkexistingproduct) {
       return next(errorHandler(404, "Product Already Exists"));
+    }
+    if (req.body.productquantity < 5) {
+      return next(errorHandler(404, "Product Quantity Must be greater than 5"));
     }
 
     const newproduct = new PRODUCT({
@@ -64,8 +67,10 @@ const getProducts = async (req, res, next) => {
 };
 const editProduct = async (req, res, next) => {
   try {
-    console.log("productID:::::", req.params.id);
-    const product = await PRODUCT.findOne({ productID: req.params.id });
+    console.log(req.params.id)
+   
+    const product = await PRODUCT.findOne({ _id: req.params.id });
+    console.log(product);
     if (!product) {
       return next(errorHandler(404, "Product not found"));
     }
@@ -77,9 +82,8 @@ const editProduct = async (req, res, next) => {
 
 const editproductdone = async (req, res, next) => {
   try {
-    console.log(req.params.id);
-    console.log("res body", req.body);
-    const oldproduct = await PRODUCT.findById({ _id: req.params.id });
+   
+    const oldproduct = await PRODUCT.findById(req.params.id);
 
     if (!oldproduct) {
       return next(errorHandler(404, "Product not found"));
@@ -95,7 +99,7 @@ const editproductdone = async (req, res, next) => {
       updateFields.productquantity = req.body.productquantity;
     if (req.body.productcategory)
       updateFields.productcategory = req.body.productcategory;
-    if (req.body.productdescription)
+    if (req.body.productdescription)``
       updateFields.productdescription = req.body.productdescription;
 
     const updated = await PRODUCT.findByIdAndUpdate(
