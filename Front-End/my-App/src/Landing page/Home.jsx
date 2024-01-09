@@ -1,5 +1,5 @@
 import React from 'react';
-import dashboard from "../assets/images/dashboard.png";
+import dashboardreal from "../assets/images/dashboardreal.png";
 import { FaHandPointRight } from "react-icons/fa";
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex-1">
-          <img className='rounded-lg mt-5' src={dashboard} alt="Dashboard" />
+          <img className='rounded-lg mt-5' src={dashboardreal} alt="Dashboard" />
         </div>
       </div>
     </header>

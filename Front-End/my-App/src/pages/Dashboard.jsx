@@ -30,6 +30,7 @@ export default function Dashboard() {
     };
     fetching();
   }, [currentUser._id]);
+  console.log(details)
 
   const pieChartData = {
     labels: details.topProducts
@@ -104,7 +105,7 @@ export default function Dashboard() {
               Total Sales
             </h3>
             <p className="text-xl font-semibold text-[#000000]">
-              $ {details.totalinvoicecost}
+              $ {details.totalsales}
             </p>
           </div>
         </div>
