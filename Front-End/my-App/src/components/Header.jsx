@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <div className="bg-[#092635]  rounded-lg p-4">
       <ul className="flex items-center justify-between">
-        <Link to="/">
+        <Link to="/dashboard">
           <li>
             <h1 className="text-white text-3xl font-extrabold hover:text-gray-300 transition duration-300 transform hover:scale-105">
               VIJAY's Inventory

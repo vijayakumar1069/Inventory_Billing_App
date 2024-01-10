@@ -27,7 +27,7 @@ export default function ResetPassword() {
     navigate("/login");
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center ">
       <form
         onSubmit={handlesubmit}
         className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"

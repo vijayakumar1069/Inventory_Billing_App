@@ -59,7 +59,7 @@ export default function Editcustomer() {
   return (
     <>
       <div className="flex flex-col my-10 mx-auto max-w-32 items-center sm:w-2/3 md:w-3/4 ">
-        <h1 className="text-3xl p-3 font-semibold">Customer Details</h1>
+        <h1 className="text-3xl p-3 font-semibold text-white ">Customer Details</h1>
         <form
           className="flex gap-4 flex-col sm:w-2/3 md:w-3/4 "
           onSubmit={handlesubmit}
@@ -96,7 +96,7 @@ export default function Editcustomer() {
             onChange={handlechange}
             value={formdata.address}
           />
-          <button className="border bg-blue-900 p-3 rounded-lg">UPDATE</button>
+          <button className="border text-white font-bold bg-blue-900 p-3 rounded-lg">UPDATE</button>
           {error && (
             <p className="text-sm font-semibold p-3 text-center text-red-600">
               {error}

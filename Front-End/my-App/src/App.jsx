@@ -23,10 +23,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NewPassword from "./pages/NewPassword";
 import VerifySignup from "./pages/VerifySignup";
 
-
 import CompoenetWrapper from "./Landing page/CompoenetWrapper";
-
-
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -36,7 +33,11 @@ function App() {
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-
+        <Route
+          path="/reset-password/:userId/:token"
+          element={<NewPassword />}
+        />{" "}
+        <Route path="/reset-password" element={<ResetPassword />} />
         {currentUser ? (
           <>
             <Route element={<PrivateRoute />}>
@@ -48,12 +49,8 @@ function App() {
                 path="/addproduct/:id"
                 element={<AddProductToInvoiceInUpdatePage />}
               />
-              <Route
-                path="/reset-password/:userId/:token"
-                element={<NewPassword />}
-              />
+
               <Route path="/verify/:id/:token" element={<VerifySignup />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
               <Route
                 path="/updateinvoiceexistingproductquantity/:id"
                 element={<UpdateExistingInvoiceProductDetails />}
