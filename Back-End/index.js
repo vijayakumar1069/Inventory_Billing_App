@@ -8,6 +8,7 @@ const productsRoutes = require("./Routes/product.route.js");
 const customerRouter = require("./Routes/customer.route.js");
 const invoicerouter = require("./Routes/admin.invoice.route.js");
 const dashboardRoutes=require("./Routes/admin.dashboard.route.js")
+const path=require("path");
 const cookieparser = require("cookie-parser");
 const app = express();
 app.use(body_parser.json());
@@ -28,6 +29,10 @@ app.use("/api/products", productsRoutes);
 app.use("/api/customers", customerRouter);
 app.use("/api/invoices", invoicerouter);
 app.use("/api/dashboard", dashboardRoutes);
+app.use(express.static(path.join(__dirname, '../Front-End/my-App/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Front-End/my-App/dist/index.html'));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

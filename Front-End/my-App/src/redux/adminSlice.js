@@ -12,6 +12,7 @@ const adminSlice = createSlice({
       state.currentUser = action.payload;
     },
     updated: (state, action) => {
+      console.log(action.payload)
       state.currentUser = action.payload;
     },
     logout: (state, action) => {

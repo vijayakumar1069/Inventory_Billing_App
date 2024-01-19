@@ -13,7 +13,6 @@ export default function CompoenetWrapper() {
       <About />
       <OurClients />
       <ContactUs />
-      
     </div>
   );
 }
