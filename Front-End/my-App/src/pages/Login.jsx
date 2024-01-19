@@ -99,7 +99,7 @@ export default function Login() {
             </Link>
             <p className="text-center">
               If you don't have an account{" "}
-              <Link to="/">
+              <Link to="/signup">
                 <span className="font-semibold text-red-800 hover:underline">
                   SIGN UP
                 </span>
