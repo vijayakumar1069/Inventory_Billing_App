@@ -1,0 +1,4 @@
+[build]
+  command = "npm run build"
+  publish = "public"  # Replace with the directory where your static files are generated
+  node_version = "14"  # Replace with your Node.js version
