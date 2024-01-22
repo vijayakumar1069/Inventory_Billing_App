@@ -65,7 +65,27 @@ const loginRouter = async (req, res, next) => {
     }
     const findadminexists = await Admin.findOne({ email });
     if (findadminexists.isVerified == false) {
-      return next(errorHandler(404, "user is Unverified"));
+      const verificationLink = `https://inventoryt-app-02.onrender.com/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
+
+      const mailOptions = {
+        from: "vijay.r20799@gmail.com",
+        to: email,
+        subject: "Account Verification",
+        text: `Click the following link to verify your account: ${verificationLink}`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+          return res.status(500).json({ error: error.toString() });
+        }
+
+        console.log("Email sent:", info.response);
+      });
+
+      return next(
+        errorHandler(404, "user is Unverified, verification sent to your mail")
+      );
     }
 
     if (!findadminexists) {
