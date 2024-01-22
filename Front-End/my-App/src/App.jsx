@@ -24,6 +24,7 @@ import NewPassword from "./pages/NewPassword";
 import VerifySignup from "./pages/VerifySignup";
 
 import CompoenetWrapper from "./Landing page/CompoenetWrapper";
+import { IoTrendingUp } from "react-icons/io5";
 
 function App() {
   const { currentUser } = useSelector((state) => state.admin);
@@ -39,7 +40,7 @@ function App() {
         />{" "}
         <Route path="/verify/:id/:token" element={<VerifySignup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        {currentUser ? (
+        {currentUser && currentUser.success != false ? (
           <>
             <Route element={<PrivateRoute />}>
               <Route path="/update/" element={<Update />} />
@@ -56,7 +57,7 @@ function App() {
                 element={<UpdateExistingInvoiceProductDetails />}
               />
               <Route element={<Layout />}>
-                <Route path="/" element={<Dashboard/>}></Route>
+                <Route path="/" element={<Dashboard />}></Route>
                 <Route path="/products" element={<AddProduct />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/customer" element={<Customer />} />

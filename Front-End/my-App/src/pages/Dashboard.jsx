@@ -30,7 +30,7 @@ export default function Dashboard() {
     };
     fetching();
   }, [currentUser._id]);
-  console.log(details)
+  console.log(details);
 
   const pieChartData = {
     labels: details.topProducts
@@ -76,10 +76,11 @@ export default function Dashboard() {
       },
     ],
   };
+  console.log(details);
 
   return (
-    <div className="mx-2 my-3 p-2">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+    <div className="min-h-screen flex flex-col flex-shrink-0 w-full bg-white ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-6 mx-4">
         <div className="bg-[#F4EAE0] p-3 rounded-lg flex items-center gap-5 hover:scale-x-105 transition duration-300">
           <FaShoppingBag
             size={30}
@@ -90,7 +91,7 @@ export default function Dashboard() {
               Total Product Value
             </h3>
             <p className="text-xl font-semibold text-[#000000]">
-              $ {details.costoftotalproduct}
+            $ {Math.round(details.costoftotalproduct)}
             </p>
           </div>
         </div>
@@ -105,7 +106,7 @@ export default function Dashboard() {
               Total Sales
             </h3>
             <p className="text-xl font-semibold text-[#000000]">
-              $ {details.totalsales}
+            $ {Math.round(details.totalsales)}
             </p>
           </div>
         </div>
@@ -151,39 +152,39 @@ export default function Dashboard() {
       </div>
 
       <div className="my-5">
-        <h1 className="text-2xl font-bold mb-4">Top Selling Product</h1>
+        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">Top Selling Product</h1>
         {details.topProducts && details.topProducts.length > 0 ? (
-          <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+          <div className="w-full md:w-2/3 mx-auto bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieChartData} />
           </div>
         ) : (
-          <p className="text-xl font-semibold text-[#000000]">
+          <p className="text-xl font-semibold text-[#1E3A8A]">
             No data available for top-selling products.
           </p>
         )}
       </div>
 
       <div className="my-5">
-        <h1 className="text-2xl font-bold mb-4">Top Buying Customer</h1>
+        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">Top Buying Customer</h1>
         {details.topCustomers && details.topCustomers.length > 0 ? (
-          <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+          <div className="w-full md:w-2/3 mx-auto bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieCustomerChartData} />
           </div>
         ) : (
-          <p className="text-xl font-semibold text-[#000000]">
+          <p className="text-xl font-semibold text-[#1E3A8A]">
             No data available for top buying customers.
           </p>
         )}
       </div>
 
       <div className="my-5">
-        <h1 className="text-2xl font-bold mb-4">Top Invoices</h1>
+        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">Top Invoices</h1>
         {details.topInvoices && details.topInvoices.length > 0 ? (
-          <div className="w-full md:w-2/3 mx-auto bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+          <div className="w-full md:w-2/3 mx-auto bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieInvoiceChartData} />
           </div>
         ) : (
-          <p className="text-xl font-semibold text-[#000000]">
+          <p className="text-xl font-semibold text-[#1E3A8A]">
             No data available for top invoices.
           </p>
         )}
@@ -191,3 +192,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+

@@ -82,12 +82,12 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="mx-5 my-5 p-3 flex flex-col items-center bg-white shadow-lg rounded-md">
+      <div className="mx-5 my-5 p-3 flex-shrink-0 flex flex-col items-center bg-white shadow-lg rounded-md">
         <h1 className="text-3xl font-bold text-gray-800 mb-5">
           Add Your Products
         </h1>
         <form
-          className="flex flex-col gap-5 w-full sm:w-4/5 py-5 "
+          className="flex flex-col gap-5 w-full sm:w-4/5 md:w-3/5 lg:w-2/5 py-5 "
           onSubmit={handlesubmit}
         >
           <input
@@ -162,9 +162,9 @@ export default function AddProduct() {
               <tr className="bg-blue-500 text-white font-semibold">
                 <th className="py-2 px-4 border-r border-b">ID</th>
                 <th className="py-2 px-4 border-r border-b">Name</th>
-                <th className="py-2 px-4 border-r border-b">Quantity</th>
+                <th className="py-2 px-4 border-r border-b ">Quantity</th>
                 <th className="py-2 px-4 border-r border-b">Price</th>
-                <th className="py-2 px-4 border-r border-b">Category</th>
+                <th className="py-2 px-4 border-r border-b ">Category</th>
                 <th className="py-2 px-4 border-b">Action</th>
               </tr>
             </thead>
@@ -176,11 +176,11 @@ export default function AddProduct() {
                 >
                   <td className="py-2 px-4 border-r">{product.productID}</td>
                   <td className="py-2 px-4 border-r">{product.productname}</td>
-                  <td className="py-2 px-4 border-r">
+                  <td className="py-2 px-4 border-r ">
                     {product.productquantity}
                   </td>
                   <td className="py-2 px-4 border-r">{product.productprice}</td>
-                  <td className="py-2 px-4 border-r">
+                  <td className="py-2 px-4 border-r ">
                     {product.productcategory}
                   </td>
                   <td className="py-2 px-4 my-5 ">

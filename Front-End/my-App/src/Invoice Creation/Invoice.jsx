@@ -12,6 +12,7 @@ export default function Invoice() {
     productquantity: 1,
     productprice: 0,
   });
+  const [message, setMessage] = useState("");
 
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,8 @@ export default function Invoice() {
         return;
       }
       setError(false);
-      setCurrentProduct({ ...data, productquantity: 1 });
+      setMessage(data.msg);
+      setCurrentProduct({ ...data.rest, productquantity: 1 });
     } catch (error) {
       setError(error.message);
     }
@@ -206,6 +208,8 @@ export default function Invoice() {
           </div>
 
           {error && <p className="p-2 font-semibold text-red-700">{error}</p>}
+          {message && <p className="p-2 font-semibold text-red-700">{message}</p>}
+
         </div>
         <div className="flex items-center gap-5">
           <label className="w-32 font-semibold">Product Name</label>
@@ -320,15 +324,15 @@ export default function Invoice() {
               <div className="text-right flex flex-col gap-6 ">
                 <div className="mb-2 flex justify-between">
                   <h3 className="font-semibold">Total Amount - </h3>
-                  <p>{totalprice}</p>
+                  <p>{Math.round(totalprice)}</p>
                 </div>
                 <div className="mb-2 flex justify-between">
                   <h3 className="font-semibold">GST % -</h3>
-                  <p>{gstfortotalprice}</p>
+                  <p>{Math.round(gstfortotalprice)}</p>
                 </div>
                 <div className="mb-2 flex justify-between">
                   <h3 className="font-semibold">Amount need to Pay - </h3>
-                  <p>{toalamountwithgst}</p>
+                  <p>{Math.round(toalamountwithgst)}</p>
                 </div>
               </div>
             </div>

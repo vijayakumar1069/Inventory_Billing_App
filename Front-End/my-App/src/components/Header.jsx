@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
-    <div className="bg-[#092635]  rounded-lg p-4">
+    <div className= " max-full bg-[#092635]  rounded-lg p-4">
       <ul className="flex items-center justify-between">
         <Link to="/dashboard">
           <li>
@@ -13,7 +13,7 @@ export default function Header() {
             </h1>
           </li>
         </Link>
-        <Link to="/update">
+        <Link to="/update" className='mr-11'>
           <li className="ml-4">
             <img
               src="https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2264922221.jpg"

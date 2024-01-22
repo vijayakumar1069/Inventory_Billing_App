@@ -8,11 +8,11 @@ const addProduct = async (req, res, next) => {
     if (req.user.id != req.params.id) {
       return next(errorHandler(404, "your not authorized to add product"));
     }
-  
+
     const checkexistingproduct = await PRODUCT.findOne({
       productID: req.body.productID,
     });
- 
+
     if (checkexistingproduct) {
       return next(errorHandler(404, "Product Already Exists"));
     }
@@ -67,8 +67,8 @@ const getProducts = async (req, res, next) => {
 };
 const editProduct = async (req, res, next) => {
   try {
-    console.log(req.params.id)
-   
+    console.log(req.params.id);
+
     const product = await PRODUCT.findOne({ _id: req.params.id });
     console.log(product);
     if (!product) {
@@ -82,7 +82,6 @@ const editProduct = async (req, res, next) => {
 
 const editproductdone = async (req, res, next) => {
   try {
-   
     const oldproduct = await PRODUCT.findById(req.params.id);
 
     if (!oldproduct) {
@@ -99,8 +98,8 @@ const editproductdone = async (req, res, next) => {
       updateFields.productquantity = req.body.productquantity;
     if (req.body.productcategory)
       updateFields.productcategory = req.body.productcategory;
-    if (req.body.productdescription)``
-      updateFields.productdescription = req.body.productdescription;
+    if (req.body.productdescription) ``;
+    updateFields.productdescription = req.body.productdescription;
 
     const updated = await PRODUCT.findByIdAndUpdate(
       req.params.id,
@@ -141,6 +140,7 @@ const getProduct = async (req, res, next) => {
     productID: req.params.id,
     admin: req.params.userid,
   });
+  var msg;
   if (!product) {
     return next(errorHandler(404, "product not found"));
   }
@@ -148,8 +148,11 @@ const getProduct = async (req, res, next) => {
   if (product.productquantity == 0 || product.productquantity < 0) {
     return next(errorHandler(404, "Out of Stock"));
   }
+  if (product.productquantity < 5) {
+    msg = `${product.productname} is only ${product.productquantity} left`;
+  }
   const { productquantity: quantity, ...rest } = product._doc;
-  res.status(200).json(rest);
+  res.status(200).json({ rest, msg });
 };
 
 module.exports = {

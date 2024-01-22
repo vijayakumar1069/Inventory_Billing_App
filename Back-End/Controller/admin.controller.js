@@ -50,7 +50,6 @@ const signupRouter = async (req, res, next) => {
         return res.status(500).json({ error: error.toString() });
       }
 
-      console.log("Email sent:", info.response);
       res.status(200).json({ result: "Verification email sent" });
     });
   } catch (error) {
@@ -64,7 +63,22 @@ const loginRouter = async (req, res, next) => {
       return next(errorHandler(401, "email and password required"));
     }
     const findadminexists = await Admin.findOne({ email });
-    console.log(findadminexists)
+    if (!findadminexists) {
+      return next(errorHandler(404, "User Not Found"));
+    }
+    if (!findadminexists) {
+      return next(errorHandler(401, "Admin not found"));
+    }
+    const password_checking = bcrypt.compareSync(
+      password,
+      findadminexists.password
+    );
+    if (!password_checking) {
+      return next(errorHandler(401, "Wrong Email Or Password"));
+    }
+
+    const token = jwt.sign({ id: findadminexists._id }, process.env.JWT_KEY);
+    const { password: pass, ...rest } = findadminexists._doc;
     if (findadminexists.isVerified == false) {
       const verificationLink = `https://inventoryt-app-02.onrender.com/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
 
@@ -80,28 +94,12 @@ const loginRouter = async (req, res, next) => {
           console.error("Error sending email:", error);
           return res.status(500).json({ error: error.toString() });
         }
-
-        console.log("Email sent:", info.response);
       });
 
       return next(
         errorHandler(404, "user is Unverified, verification sent to your mail")
       );
     }
-
-    if (!findadminexists) {
-      return next(errorHandler(401, "Admin not found"));
-    }
-    const password_checking = bcrypt.compareSync(
-      password,
-      findadminexists.password
-    );
-    if (!password_checking) {
-      return next(errorHandler(401, "Wrong Email Or Password"));
-    }
-
-    const token = jwt.sign({ id: findadminexists._id }, process.env.JWT_KEY);
-    const { password: pass, ...rest } = findadminexists._doc;
 
     res
       .cookie("access_token", token, { httpOnly: true })
@@ -171,7 +169,6 @@ const reset_password = async (req, res, next) => {
         return res.status(500).json({ error: error.toString() });
       }
 
-      console.log("Email sent:", info.response);
       res.status(200).json({ message: "Email sent", response: info.response });
     });
   } catch (error) {
@@ -181,9 +178,6 @@ const reset_password = async (req, res, next) => {
 };
 const newpasswordchange = async (req, res, next) => {
   try {
-    console.log(req.body);
-    console.log(req.params.id);
-
     const user = await Admin.findById({ _id: req.params.id });
 
     if (!user) {
@@ -197,7 +191,6 @@ const newpasswordchange = async (req, res, next) => {
     }
 
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
-    console.log(hashedPassword);
 
     // Update user password in the database
     user.password = hashedPassword;
@@ -212,7 +205,6 @@ const newpasswordchange = async (req, res, next) => {
 };
 const verifyUser = async (req, res, next) => {
   const { id, token } = req.params;
-  console.log(id, token);
 
   const user = await Admin.findById(id);
   console.log("user", user);
@@ -222,9 +214,30 @@ const verifyUser = async (req, res, next) => {
   if (user.verificationToken !== token) {
     return next(errorHandler(404, "Token Is Not Valid"));
   }
+
+  res.status(200).json(user);
+};
+const verificationstatus = async (req, res, next) => {
+  const { id, token } = req.params;
+
+  const user = await Admin.findById(id);
+  console.log("user status", user);
+
+  if (!user) {
+    return next(errorHandler(404, "User not found"));
+  }
+  if (user.verificationToken !== token) {
+    return next(errorHandler(404, "Token Is Not Valid"));
+  }
   user.isVerified = true;
   await user.save();
-  res.status(200).json({ verified: "verified",user });
+  const jwttoken = jwt.sign({ id: user._id }, process.env.JWT_KEY);
+  const { password: pass, ...rest } = user._doc;
+
+  res
+    .cookie("access_token", jwttoken, { httpOnly: true })
+    .status(200)
+    .json(user);
 };
 
 module.exports = {
@@ -235,4 +248,5 @@ module.exports = {
   reset_password,
   newpasswordchange,
   verifyUser,
+  verificationstatus,
 };

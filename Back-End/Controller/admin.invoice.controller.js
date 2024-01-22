@@ -67,7 +67,7 @@ const createInvoice = async (req, res, next) => {
         return next(
           errorHandler(
             404,
-            "Product quantity is less than your required quantity"
+            `Product quantity is less than your required quantity ${quantityCheck.productname}`
           )
         );
       }

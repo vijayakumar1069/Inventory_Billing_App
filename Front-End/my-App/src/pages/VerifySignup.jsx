@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-
+import { loginstart } from "../redux/adminSlice.js";
 export default function VerifySignup() {
   const [error, setError] = useState(false);
   const [result, setResult] = useState(false);
@@ -17,10 +17,9 @@ export default function VerifySignup() {
         const res = await fetch(`/api/admin/verify/${id}/${token}`);
         const data = await res.json();
 
-        if (data.verified === false) {
+        if (data.success === false) {
           setError(data.message);
         } else {
-          setUser(data.user);
           setSuccess(true);
         }
       } catch (error) {
@@ -30,16 +29,18 @@ export default function VerifySignup() {
 
     fetching();
   }, [id, token]);
+  console.log(user);
 
-  const handlesubmit = () => {
-    if (success) {
-      dispatch(loginstart(user));
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 4000);
-    } else {
-      console.log("Verification failed");
+  const handlesubmit = async () => {
+    const res = await fetch(`/api/admin/verificationstatus/${id}/${token}`);
+    const data = await res.json();
+    if (data.success === false) {
+      setError(data.message);
+      return;
     }
+    console.log(data);
+    dispatch(loginstart(data));
+    navigate("/dashboard");
   };
 
   return (

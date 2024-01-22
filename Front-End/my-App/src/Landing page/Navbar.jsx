@@ -181,7 +181,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  to="/"
+                  to="/signup"
                   className="bg-green-500 hover:bg-green-700 text-[#000000] font-bold py-2 px-4 rounded-full hover:shadow-md transition duration-300"
                   onClick={closeMobileNav}
                 >
