@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function VerifySignup() {
@@ -7,7 +8,9 @@ export default function VerifySignup() {
   const { id, token } = useParams();
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-
+  const { currentUser } = useSelector((state) => state.admin);
+  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -17,6 +20,7 @@ export default function VerifySignup() {
         if (data.verified === false) {
           setError(data.message);
         } else {
+          setUser(data.user);
           setSuccess(true);
         }
       } catch (error) {
@@ -29,6 +33,7 @@ export default function VerifySignup() {
 
   const handlesubmit = () => {
     if (success) {
+      dispatch(loginstart(user));
       setTimeout(() => {
         navigate("/dashboard");
       }, 4000);

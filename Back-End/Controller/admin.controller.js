@@ -223,7 +223,7 @@ const verifyUser = async (req, res, next) => {
   }
   user.isVerified = true;
   await user.save();
-  res.status(200).json({ verified: "verified" });
+  res.status(200).json({ verified: "verified",user });
 };
 
 module.exports = {
