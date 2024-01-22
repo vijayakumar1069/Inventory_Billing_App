@@ -10,41 +10,57 @@ export default function VerifySignup() {
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`/api/admin/verify/${id}/${token}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`/api/admin/verify/${id}/${token}`);
+        const data = await res.json();
 
-      if (data.success === false) {
-        setError(data.message);
-        return;
+        if (data.verified === false) {
+          setError(data.message);
+        } else {
+          setSuccess(true);
+        }
+      } catch (error) {
+        setError("An error occurred during verification");
       }
-      setSuccess(data.verified);
     };
+
     fetching();
   }, [id, token]);
 
-  const handlesubmit = async () => {
+  const handlesubmit = () => {
     if (success) {
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000);
     } else {
-      // Handle the case when verification fails
-      console.log("verify failed");
+      console.log("Verification failed");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <button
-        onClick={handlesubmit}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Verify
-      </button>
-      {error && (
-        <p className="text-red-800 p-2 text-center font-semibold">{error}</p>
-      )}
-      {result && (
-        <p className="text-green-800 p-2 text-center font-semibold">{result}</p>
-      )}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-4">Account Verification</h2>
+
+        <p className="mb-4">
+          Thank you for registering. Please click the button below to verify
+          your account:
+        </p>
+
+        <button
+          onClick={handlesubmit}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Verify
+        </button>
+
+        {error && <p className="text-red-800 mt-4 font-semibold">{error}</p>}
+        {result && (
+          <p className="text-green-800 mt-4 font-semibold">
+            Verification successful
+          </p>
+        )}
+      </div>
     </div>
   );
 }
