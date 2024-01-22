@@ -56,7 +56,7 @@ function App() {
                 element={<UpdateExistingInvoiceProductDetails />}
               />
               <Route element={<Layout />}>
-                {/* <Route path="/" element={<Dashboard/>}></Route> */}
+                <Route path="/" element={<Dashboard/>}></Route>
                 <Route path="/products" element={<AddProduct />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/customer" element={<Customer />} />

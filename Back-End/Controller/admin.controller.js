@@ -64,6 +64,7 @@ const loginRouter = async (req, res, next) => {
       return next(errorHandler(401, "email and password required"));
     }
     const findadminexists = await Admin.findOne({ email });
+    console.log(findadminexists)
     if (findadminexists.isVerified == false) {
       const verificationLink = `https://inventoryt-app-02.onrender.com/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
 
