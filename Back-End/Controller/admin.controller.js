@@ -35,7 +35,7 @@ const signupRouter = async (req, res, next) => {
       verificationToken,
     });
     await addnewadmin.save();
-    const verificationLink = `http://localhost:5173/verify/${addnewadmin._id}/${verificationToken}`;
+    const verificationLink = `https://inventoryt-app-02.onrender.com/${addnewadmin._id}/${verificationToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",
