@@ -31,7 +31,7 @@ export default function VerifySignup() {
     if (success) {
       setTimeout(() => {
         navigate("/dashboard");
-      }, 3000);
+      }, 4000);
     } else {
       console.log("Verification failed");
     }
