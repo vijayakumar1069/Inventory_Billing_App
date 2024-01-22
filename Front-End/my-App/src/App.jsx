@@ -37,6 +37,7 @@ function App() {
           path="/reset-password/:userId/:token"
           element={<NewPassword />}
         />{" "}
+        <Route path="/verify/:id/:token" element={<VerifySignup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         {currentUser ? (
           <>
@@ -50,7 +51,6 @@ function App() {
                 element={<AddProductToInvoiceInUpdatePage />}
               />
 
-              <Route path="/verify/:id/:token" element={<VerifySignup />} />
               <Route
                 path="/updateinvoiceexistingproductquantity/:id"
                 element={<UpdateExistingInvoiceProductDetails />}

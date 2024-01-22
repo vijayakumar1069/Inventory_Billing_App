@@ -136,7 +136,7 @@ const reset_password = async (req, res, next) => {
     user.resetToken = resetToken;
     await user.save();
 
-    const resetLink = `http://localhost:5173/reset-password/${user._id}/${resetToken}`;
+    const resetLink = `https://inventoryt-app-02.onrender.com/reset-password/${user._id}/${resetToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",
@@ -192,8 +192,9 @@ const newpasswordchange = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   const { id, token } = req.params;
   console.log(id, token);
- 
+
   const user = await Admin.findById(id);
+  console.log("user", user);
   if (!user) {
     return next(errorHandler(404, "User not found"));
   }
