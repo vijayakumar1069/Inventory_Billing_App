@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://your-render-backend-url",
+        target: "https://inventory-app-01.onrender.com",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
