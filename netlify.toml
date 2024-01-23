@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://inventory-app-01.onrender.com/:splat"
+  to = "https://your-render-backend-url/:splat"
   status = 200
   force = true
