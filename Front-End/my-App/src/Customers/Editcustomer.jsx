@@ -64,14 +64,7 @@ export default function Editcustomer() {
           className="flex gap-4 flex-col sm:w-2/3 md:w-3/4 "
           onSubmit={handlesubmit}
         >
-          {/* <input
-            type="number"
-            id="customerID"
-            placeholder="CustomerID"
-            className="border p-3 rounded-lg"
-            onChange={handlechange}
-            value={formdata.customerID}
-          /> */}
+        
           <input
             type="text"
             id="name"
