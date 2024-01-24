@@ -10,7 +10,10 @@ const addCustomer = async (req, res, next) => {
     const { customerID, name, email, address } = req.body;
     console.log(req.params.id);
 
-    const customer = await CUSTOMER.findOne({ customerID });
+    const customer = await CUSTOMER.findOne({
+      customerID,
+      admin: req.params.id,
+    });
     if (customer) {
       return next(errorHandler(404, "already existes"));
     } else {

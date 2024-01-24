@@ -11,6 +11,7 @@ const addProduct = async (req, res, next) => {
 
     const checkexistingproduct = await PRODUCT.findOne({
       productID: req.body.productID,
+      admin: req.params.id,
     });
 
     if (checkexistingproduct) {
