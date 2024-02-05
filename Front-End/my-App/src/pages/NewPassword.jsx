@@ -27,7 +27,7 @@ const NewPassword = () => {
       setError("Both Password Must be Same");
       return;
     }
-    const res = await fetch(`/api/admin/newpassword/${userId}`, {
+    const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/newpassword/${userId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
