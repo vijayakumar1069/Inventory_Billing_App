@@ -6,12 +6,13 @@ export default function AddProduct() {
   const { currentUser } = useSelector((state) => state.admin);
   const [prevProducts, setPrevProducts] = useState([]);
   const [formdata, setFormdata] = useState({
-    productID: 0,
+    productID: null,
     productname: "",
     productdescription: "",
     productcategory: "",
-    productquantity: 0,
-    productprice: 0,
+    productquantity: null,
+    productprice: null,
+    initailquantity:null
   });
   const [error, setError] = useState(false);
 
@@ -58,6 +59,15 @@ export default function AddProduct() {
       }
       setError(false);
       setPrevProducts([data, ...prevProducts]);
+      setFormdata({
+        productID: "",
+        productname: "",
+        productdescription: "",
+        productcategory: "",
+        productquantity: "",
+        productprice: "",
+        initailquantity: "",
+      });
     } catch (error) {
       setError(error.message);
     }
@@ -94,6 +104,7 @@ export default function AddProduct() {
             type="number"
             placeholder="Product ID"
             id="productID"
+            value={formdata.productID}
             className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
@@ -107,6 +118,7 @@ export default function AddProduct() {
             type="text"
             placeholder="Product Name"
             id="productname"
+            value={formdata.productname}
             className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
@@ -114,6 +126,7 @@ export default function AddProduct() {
             type="text"
             placeholder="Product Category"
             id="productcategory"
+            value={formdata.productcategory}
             className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
@@ -121,6 +134,7 @@ export default function AddProduct() {
             type="number"
             placeholder="Product Price"
             id="productprice"
+            value={formdata.productprice}
             className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />
@@ -129,6 +143,7 @@ export default function AddProduct() {
             min={1}
             placeholder="Product Quantity"
             id="productquantity"
+            value={formdata.productquantity}
             className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
@@ -138,6 +153,7 @@ export default function AddProduct() {
             min={1}
             placeholder="Initial Product Quantity"
             id="initailquantity"
+            value={formdata.initailquantity}
             className="p-3 border rounded-lg focus:outline-none"
             inputMode="numeric"
             onChange={handlechange}
@@ -146,6 +162,7 @@ export default function AddProduct() {
             type="text"
             placeholder="Product Description"
             id="productdescription"
+            value={formdata.productdescription}
             className="p-3 border rounded-lg focus:outline-none"
             onChange={handlechange}
           />

@@ -30,6 +30,7 @@ export default function Update() {
         body: JSON.stringify(formdata),
       });
       const data = await res.json();
+      console.log(data);
       if (data.message === false) {
         setLoading(false);
         setError(data.message);
@@ -49,6 +50,7 @@ export default function Update() {
   };
   const handledelete = async () => {
     try {
+      console.log("delete finished")
       const res = await fetch(`/api/admin/logout`);
 
       const data = await res.json();

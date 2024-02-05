@@ -40,6 +40,7 @@ function App() {
         />{" "}
         <Route path="/verify/:id/:token" element={<VerifySignup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        
         {currentUser && currentUser.success != false ? (
           <>
             <Route element={<PrivateRoute />}>
