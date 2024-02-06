@@ -4,12 +4,4 @@
   status = 200
   force = true
 
-# Additional redirects or settings can be added below
-# ...
 
-# Example: Redirect other routes to index.html for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
