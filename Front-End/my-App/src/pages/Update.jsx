@@ -22,7 +22,7 @@ export default function Update() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/update/${currentUser._id}`, {
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
@@ -51,7 +51,7 @@ export default function Update() {
   const handledelete = async () => {
     try {
       console.log("delete finished")
-      const res = await fetch(`/api/admin/logout`);
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/logout`);
 
       const data = await res.json();
       if (data.success === false) {

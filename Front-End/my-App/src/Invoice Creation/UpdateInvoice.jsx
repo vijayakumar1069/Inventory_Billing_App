@@ -43,7 +43,7 @@ export const UpdateInvoice = () => {
   
     try {
       const res = await fetch(
-        `/api/invoices/updateexistinginvoice/${paramsid}`,
+        `https://inventory-app-01.onrender.com/api/invoices/updateexistinginvoice/${paramsid}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ export const UpdateInvoice = () => {
     console.log("hii");
     try {
       const res = await fetch(
-        `/api/invoices/deleteproductfrominvoice/${paramsid}?delete_id=${delete_id}`,
+        `https://inventory-app-01.onrender.com/api/invoices/deleteproductfrominvoice/${paramsid}?delete_id=${delete_id}`,
         {
           method: "DELETE",
         }
@@ -98,7 +98,7 @@ export const UpdateInvoice = () => {
   useEffect(() => {
     const fetching = async () => {
       try {
-        const res = await fetch(`/api/invoices/updateinvoice/${paramsid}`);
+        const res = await fetch(`https://inventory-app-01.onrender.com/api/invoices/updateinvoice/${paramsid}`);
 
         if (res.ok) {
           const data = await res.json();
