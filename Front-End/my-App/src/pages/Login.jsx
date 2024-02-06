@@ -21,7 +21,7 @@ export default function Login() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://inventory-app-01.onrender.com/api/admin/login", {
+      const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

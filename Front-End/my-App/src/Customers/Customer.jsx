@@ -18,7 +18,7 @@ export default function Customer() {
   useEffect(() => {
     const fetching = async () => {
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/getallcustomer/${currentUser._id}`
+        `/api/customers/getallcustomer/${currentUser._id}`
       );
       const data = await res.json();
       if (data.success === false) {
@@ -39,7 +39,7 @@ export default function Customer() {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/addcustomer/${currentUser._id}  `,
+        `/api/customers/addcustomer/${currentUser._id}  `,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -23,7 +23,7 @@ export const UpdateExistingInvoiceProductDetails = () => {
     const fetching = async () => {
       try {
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`
+          `/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`
         );
 
         const data = await res.json();
@@ -52,7 +52,7 @@ export const UpdateExistingInvoiceProductDetails = () => {
     e.preventDefault();
     try {
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
+        `/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
         {
           method: "POST",
           headers: {
