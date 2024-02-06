@@ -29,7 +29,7 @@ app.use("/api/products", productsRoutes);
 app.use("/api/customers", customerRouter);
 app.use("/api/invoices", invoicerouter);
 app.use("/api/dashboard", dashboardRoutes);
-// app.use(express.static(path.join(__dirname, '../Front-End/my-App/dist')));
+app.use(express.static(path.join(__dirname, '../Front-End/my-App/dist')));
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../Front-End/my-App/dist/index.html'));
 // });
