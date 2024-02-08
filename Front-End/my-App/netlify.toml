@@ -1,12 +1,4 @@
 [[redirects]]
-  from = "/api/*"
-  to = "https://inventory-app-01.onrender.com/:splat"
-  status = 200
-  force = true
-
-
-[[redirects]]
-from = "/verify/*"
-to = "https://inventory-app-01.onrender.com/:splat"
-status = 200
-force = true
+from="/*"
+to="/index.html"
+status=200
