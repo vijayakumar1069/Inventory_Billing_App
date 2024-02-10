@@ -51,12 +51,10 @@ const signupRouter = async (req, res, next) => {
         console.error("Error sending email:", error);
         return res.status(500).json({ error: error.toString() });
       }
-
-      res
-        .status(200)
-        .cookie("access_token", token, { httpOnly: true })
-        .json({ result: "Verification email sent" });
     });
+    res.cookie("access_token", token, { httpOnly: true });
+
+    res.status(200).json({ result: "Verification email sent" });
   } catch (error) {
     next(error);
   }
@@ -257,6 +255,5 @@ module.exports = {
   verifyUser,
   verificationstatus,
 };
-
 
 // http://localhost:5173
