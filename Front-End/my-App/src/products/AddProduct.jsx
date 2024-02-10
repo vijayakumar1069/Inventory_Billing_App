@@ -19,7 +19,7 @@ export default function AddProduct() {
   useEffect(() => {
     const fetching = async () => {
       try {
-        const res = await fetch(`https://inventory-app-01.onrender.com/api/products/getproducts/${currentUser._id}`);
+        const res = await fetch(`/api/products/getproducts/${currentUser._id}`);
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);
@@ -44,7 +44,7 @@ export default function AddProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/addproduct/${currentUser._id}`, {
+      const res = await fetch(`/api/products/addproduct/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export default function AddProduct() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/deleteproduct/${id}`, {
+      const res = await fetch(`/api/products/deleteproduct/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();

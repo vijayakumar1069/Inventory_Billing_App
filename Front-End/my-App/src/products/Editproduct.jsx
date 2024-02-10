@@ -16,7 +16,7 @@ export default function EditProduct() {
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/editproduct/${params.id}`);
+      const res = await fetch(`/api/products/editproduct/${params.id}`);
       const data = await res.json();
       setFormdata(data);
     };
@@ -34,7 +34,7 @@ export default function EditProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/editproductdone/${params.id}`, {
+      const res = await fetch(`/api/products/editproductdone/${params.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formdata),

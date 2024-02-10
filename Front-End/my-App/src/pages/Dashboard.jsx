@@ -17,7 +17,7 @@ export default function Dashboard() {
     const fetching = async () => {
       try {
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/dashboard/getdashboarddetails/${currentUser._id}`
+          `/api/dashboard/getdashboarddetails/${currentUser._id}`
         );
         const data = await res.json();
         if (data.success === false) {

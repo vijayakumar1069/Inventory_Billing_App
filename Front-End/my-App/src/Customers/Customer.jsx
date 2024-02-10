@@ -39,7 +39,7 @@ export default function Customer() {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/addcustomer/${currentUser._id}  `,
+        `/api/customers/addcustomer/${currentUser._id}  `,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -65,7 +65,7 @@ export default function Customer() {
   };
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/deletecustomer/${id}`, {
+      const res = await fetch(`/api/customers/deletecustomer/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();

@@ -18,7 +18,7 @@ export default function Editcustomer() {
   };
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/editcustomer/${id}`);
+      const res = await fetch(`/api/customers/editcustomer/${id}`);
       const data = await res.json();
       if (data.success == false) {
         console.log(data.message);
@@ -36,7 +36,7 @@ export default function Editcustomer() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/updatecustomer/${id}`, {
+      const res = await fetch(`/api/customers/updatecustomer/${id}`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",

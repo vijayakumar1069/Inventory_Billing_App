@@ -21,7 +21,7 @@ export default function Signup() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("https://inventory-app-01.onrender.com/api/admin/signup", {
+      const res = await fetch("/api/admin/signup", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

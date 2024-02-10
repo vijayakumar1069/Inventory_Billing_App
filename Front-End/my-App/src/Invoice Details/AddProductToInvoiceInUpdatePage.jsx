@@ -26,7 +26,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
   const handlesearchProductID = async () => {
     try {
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/products/getproduct/${currentproduct.productID}`
+        `/api/products/getproduct/${currentproduct.productID}`
       );
       const data = await res.json();
       if (data.success === false) {
@@ -89,7 +89,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
     const fetching = async () => {
       try {
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/invoices/getproductsforexistinginvoice/${id}`
+          `/api/invoices/getproductsforexistinginvoice/${id}`
         );
         const data = await res.json();
         setPrevProducts(data);
@@ -130,7 +130,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/addproductstoexistinginvoice/${id}`,
+        `/api/invoices/addproductstoexistinginvoice/${id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
