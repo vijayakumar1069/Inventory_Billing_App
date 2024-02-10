@@ -20,6 +20,7 @@ export default function Dashboard() {
           `https://inventory-app-01.onrender.com/api/dashboard/getdashboarddetails/${currentUser._id}`
         );
         const data = await res.json();
+        console.log(data);
         if (data.success === false) {
           console.log(data.message);
         }
