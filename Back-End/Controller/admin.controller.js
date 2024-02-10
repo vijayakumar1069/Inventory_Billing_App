@@ -54,7 +54,7 @@ const signupRouter = async (req, res, next) => {
 
       res
         .status(200)
-        .cookie("access token", token, { httpOnly: true })
+        .cookie("access_token", token, { httpOnly: true })
         .json({ result: "Verification email sent" });
     });
   } catch (error) {
