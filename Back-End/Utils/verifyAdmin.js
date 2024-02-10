@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 
 const verifyAdmin = async (req, res, next) => {
   const token = req.cookies.access_token;
+  console.log(req.cookies.access_token)
+  console.log(token)
   if (!token) {
     return next(errorHandler(404, "unauthorized Token provided"));
   }
