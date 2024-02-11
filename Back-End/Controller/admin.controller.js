@@ -57,6 +57,7 @@ const signupRouter = async (req, res, next) => {
     //   secure: true,
     //   sameSite: "None",
     // });
+    
 
     res.status(200).json({ result: "Verification email sent", token });
   } catch (error) {

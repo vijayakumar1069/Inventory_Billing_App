@@ -2,15 +2,11 @@ const errorHandler = require("./errorHandler");
 const jwt = require("jsonwebtoken");
 
 const verifyAdmin = async (req, res, next) => {
-  let token = req.cookies.access_token; // Check for token in cookies
+  const token = req.headers.authorization;
 
-  // If token is not found in cookies, check local storage
-  if (!token && req.headers.authorization) {
-    const authHeader = req.headers.authorization;
-    const tokenFromHeader = authHeader.split(" ")[1];
-    token = tokenFromHeader;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
-
   // If token is not found in cookies or local storage, return an error
   if (!token) {
     return next(errorHandler(404, "Unauthorized token provided"));
