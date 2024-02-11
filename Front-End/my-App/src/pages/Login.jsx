@@ -32,13 +32,14 @@ export default function Login() {
         }
       );
       const data = await res.json();
-      const token1 = data.token;
-      localStorage.setItem("access_token", token1);
+      
       if (data.success === false) {
         console.log(data.message);
         return setError(data.message);
       }
       dispatch(loginstart(data));
+      const token1 = data.token;
+      localStorage.setItem("access_token", token1);
 
       setError(false);
       navigate("/dashboard");

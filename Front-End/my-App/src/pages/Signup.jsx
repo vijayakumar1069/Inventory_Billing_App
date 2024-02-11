@@ -29,13 +29,15 @@ export default function Signup() {
         body: JSON.stringify(formdata),
       });
       const data = await res.json();
-      const token1=data.token;
-      localStorage.setItem("access_token", token1);
+     
+      
 
       if (data.success === false) {
         setLoading(false);
         return setError(data.message);
       }
+      const token1=data.token;
+      localStorage.setItem("access_token", token1);
       setSuccess(data.result);
       setLoading(false);
       setError(false);
