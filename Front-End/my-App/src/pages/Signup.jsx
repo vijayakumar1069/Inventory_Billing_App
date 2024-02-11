@@ -25,6 +25,7 @@ export default function Signup() {
         method: "POST",
         headers: {
           "content-Type": "application/json",
+          
         },
         body: JSON.stringify(formdata),
       });

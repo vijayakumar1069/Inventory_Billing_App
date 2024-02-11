@@ -1,28 +1,33 @@
-const errorHandler = require("./errorHandler");
+// middleware/authMiddleware.js
+
 const jwt = require("jsonwebtoken");
 
-const verifyAdmin = async (req, res, next) => {
-  const token = req.headers.authorization;
+const authMiddleware = (req, res, next) => {
+  // Get the access_token from the Authorization header
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "Unauthorized: No access_token provided" });
+  }
+
+  // Extract the token from the "Bearer" scheme
+  const token = authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
-  // If token is not found in cookies or local storage, return an error
-  if (!token) {
-    return next(errorHandler(404, "Unauthorized token provided"));
+    return res.status(401).json({ message: "Unauthorized: Invalid access_token format" });
   }
 
   try {
-    // Verify the token using the JWT library
-    const user = jwt.verify(token, process.env.JWT_KEY);
+    // Verify the access_token
+    const decoded = jwt.verify(token, process.env.JWT_KEY); // Use the same secret key as used during token generation
 
-    // If verification is successful, attach user information to the request
-    req.user = user;
+    // Attach user information to the request object
+    req.user = decoded;
     next();
-  } catch (err) {
-    console.error(err);
-    return next(errorHandler(404, "Forbidden error"));
+  } catch (error) {
+    console.error("Error during access_token verification:", error);
+    return res.status(401).json({ message: "Unauthorized: Invalid access_token" });
   }
 };
 
-module.exports = verifyAdmin;
+module.exports = authMiddleware;
