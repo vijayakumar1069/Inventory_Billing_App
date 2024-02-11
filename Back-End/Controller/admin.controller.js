@@ -52,13 +52,13 @@ const signupRouter = async (req, res, next) => {
         return res.status(500).json({ error: error.toString() });
       }
     });
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-    });
+    // res.cookie("access_token", token, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: "None",
+    // });
 
-    res.status(200).json({ result: "Verification email sent" });
+    res.status(200).json({ result: "Verification email sent", token });
   } catch (error) {
     next(error);
   }
@@ -108,14 +108,7 @@ const loginRouter = async (req, res, next) => {
       );
     }
 
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-      })
-      .status(200)
-      .json(rest);
+    res.status(200).json({ rest, token });
   } catch (error) {
     next(error);
   }
