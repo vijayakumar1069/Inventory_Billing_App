@@ -52,7 +52,11 @@ const signupRouter = async (req, res, next) => {
         return res.status(500).json({ error: error.toString() });
       }
     });
-    res.cookie("access_token", token, { httpOnly: true });
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
 
     res.status(200).json({ result: "Verification email sent" });
   } catch (error) {
@@ -105,7 +109,11 @@ const loginRouter = async (req, res, next) => {
     }
 
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      })
       .status(200)
       .json(rest);
   } catch (error) {
