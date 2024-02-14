@@ -5,9 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    if (req.user != req.params.id) {
-      return next(errorHandler(404, "your not authorized to add product"));
-    }
+   
 
     const checkexistingproduct = await PRODUCT.findOne({
       productID: req.body.productID,
