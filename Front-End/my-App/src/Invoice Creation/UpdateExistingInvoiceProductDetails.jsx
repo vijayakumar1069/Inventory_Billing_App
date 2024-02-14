@@ -22,8 +22,13 @@ export const UpdateExistingInvoiceProductDetails = () => {
   useEffect(() => {
     const fetching = async () => {
       try {
+        const t=localStorage.getItem("access_token");
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`
+          `/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`,{
+            headers:{
+              Authorization: `Bearer ${t}`,
+            }
+          }
         );
 
         const data = await res.json();
@@ -51,12 +56,14 @@ export const UpdateExistingInvoiceProductDetails = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
+        `/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
         {
           method: "POST",
           headers: {
             "content-type": "application/json",
+            Authorization: `Bearer ${t}`,
           },
           body: JSON.stringify({ prevProductsDetails }),
         }

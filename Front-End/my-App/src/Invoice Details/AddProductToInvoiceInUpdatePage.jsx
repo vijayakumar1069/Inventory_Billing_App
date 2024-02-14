@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link, useParams,useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const AddProductToInvoiceInUpdatePage = () => {
+  const { currentUser } = useSelector((state) => state.admin);
   const [currentproduct, setCurrentProduct] = useState({
     productID: 0,
     productname: "",
@@ -23,10 +25,16 @@ export const AddProductToInvoiceInUpdatePage = () => {
   const [toalamountwithgst, setToalamountwithgst] = useState(0);
   const [error, setError] = useState(false);
   const [prevProducts, setPrevProducts] = useState([]);
+  console.log("currentproducts: " + currentproduct)
   const handlesearchProductID = async () => {
     try {
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/products/getproduct/${currentproduct.productID}`
+        `/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
+          headers:{
+            Authorization: `Bearer ${t}`,
+          }
+        }
       );
       const data = await res.json();
       if (data.success === false) {
@@ -36,7 +44,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
       }
       setError(false);
 
-      setCurrentProduct({ ...data, productquantity: 1 });
+      setCurrentProduct({ ...data.rest, productquantity: 1 });
     } catch (error) {
       setError(error.message);
     }
@@ -88,8 +96,14 @@ export const AddProductToInvoiceInUpdatePage = () => {
   useEffect(() => {
     const fetching = async () => {
       try {
+        const t=localStorage.getItem("access_token");
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/invoices/getproductsforexistinginvoice/${id}`
+          `/api/invoices/getproductsforexistinginvoice/${id}`,
+          {
+            headers:{
+              Authorization: `Bearer ${t}`,
+            }
+          }
         );
         const data = await res.json();
         setPrevProducts(data);
@@ -129,11 +143,13 @@ export const AddProductToInvoiceInUpdatePage = () => {
     }
     try {
       setLoading(true);
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/addproductstoexistinginvoice/${id}`,
+        `/api/invoices/addproductstoexistinginvoice/${id}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${t}`, },
           body: JSON.stringify({ prevProducts }),
         }
       );
@@ -153,13 +169,13 @@ export const AddProductToInvoiceInUpdatePage = () => {
   };
   return (
     <div className="flex flex-col ">
-      <h1 className="text-2xl p-3 my-5 text-center font-bold">
+      <h1 className="text-2xl p-3 my-5 text-center font-bold text-white">
         Add your Products
       </h1>
       <div className=" flex flex-col gap-4 flex-wrap p-2 ">
         <div className="flex flex-col gap-5">
           <div className=" flex gap-5 items-center">
-            <label className="font-semibold w-32"> Product ID :</label>
+            <label className="font-semibold w-32  text-white"> Product ID :</label>
             <input
               type="number"
               id="productID"
@@ -168,7 +184,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
               onChange={handlechange}
               value={currentproduct.productID}
             />
-            <FaSearch size={25} onClick={handlesearchProductID} />
+            <FaSearch size={25} onClick={handlesearchProductID} className="bg-white rounded-md " />
           </div>
           <div className="">
             {" "}
@@ -178,7 +194,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
           </div>
         </div>
         <div className="flex gap-5 items-center  ">
-          <label className="font-semibold w-32">Product Name :</label>
+          <label className="font-semibold w-32 text-white">Product Name :</label>
           <input
             onChange={handlechange}
             className="rounded-lg p-3 border w-full  "
@@ -189,7 +205,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
           />
         </div>
         <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32"> Description :</label>
+          <label className="font-semibold w-32 text-white"> Description :</label>
           <input
             onChange={handlechange}
             className="rounded-lg p-3 border w-full  "
@@ -200,8 +216,8 @@ export const AddProductToInvoiceInUpdatePage = () => {
           />
         </div>
         <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32">category :</label>
-
+          <label className="font-semibold w-32 text-white">category :</label>
+ 
           <input
             className="rounded-lg p-3 border w-full "
             type="text"
@@ -212,7 +228,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
         </div>
 
         <div className="flex gap-5 items-center">
-          <label className="font-semibold w-32 ">quantity : </label>
+          <label className="font-semibold w-32  text-white">quantity : </label>
           <input
             onChange={handlechange}
             className="rounded-lg p-3 border w-full  "
@@ -224,7 +240,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
           />
         </div>
         <div className="flex gap-4 items-center ">
-          <label className="font-semibold w-32">Price :</label>
+          <label className="font-semibold w-32 text-white">Price :</label>
           <input
             onChange={handlechange}
             className="rounded-lg p-3 border w-full "

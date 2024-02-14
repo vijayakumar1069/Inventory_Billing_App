@@ -14,7 +14,7 @@ export default function VerifySignup() {
   useEffect(() => {
     const fetching = async () => {
       try {
-        const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/verify/${id}/${token}`);
+        const res = await fetch(`/api/admin/verify/${id}/${token}`);
         const data = await res.json();
 
         if (data.success === false) {
@@ -32,7 +32,9 @@ export default function VerifySignup() {
   console.log(user);
 
   const handlesubmit = async () => {
-    const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/verificationstatus/${id}/${token}`);
+    const res = await fetch(
+      `/api/admin/verificationstatus/${id}/${token}`
+    );
     const data = await res.json();
     if (data.success === false) {
       setError(data.message);

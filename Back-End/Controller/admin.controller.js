@@ -35,7 +35,7 @@ const signupRouter = async (req, res, next) => {
       verificationToken,
     });
     await addnewadmin.save();
-    const verificationLink = `https://gilded-medovik-7ebb95.netlify.app/verify/${addnewadmin._id}/${verificationToken}`;
+    const verificationLink = `http://localhost:5173/verify/${addnewadmin._id}/${verificationToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",
@@ -59,7 +59,7 @@ const signupRouter = async (req, res, next) => {
     // });
     
 
-    res.status(200).json({ result: "Verification email sent", token });
+    res.status(200).json({ result: "Verification email sent" });
   } catch (error) {
     next(error);
   }
@@ -88,7 +88,7 @@ const loginRouter = async (req, res, next) => {
     const token = jwt.sign({ id: findadminexists._id }, process.env.JWT_KEY);
     const { password: pass, ...rest } = findadminexists._doc;
     if (findadminexists.isVerified == false) {
-      const verificationLink = `https://gilded-medovik-7ebb95.netlify.app/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
+      const verificationLink = `http://localhost:5173/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
 
       const mailOptions = {
         from: "vijay.r20799@gmail.com",
@@ -109,21 +109,22 @@ const loginRouter = async (req, res, next) => {
       );
     }
 
-    res.status(200).json({ rest, token });
+    res.status(200).json( {rest,token} );
   } catch (error) {
     next(error);
   }
 };
 const updateRouter = async (req, res, next) => {
   try {
-    if (req.user.id != req.params.id) {
-      return next(404, "you can update your account");
+    console.log("req user: " + req.user)
+    if (req.user != req.params.id) {
+      return next(404, "you can't update your account");
     }
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password);
     }
     const updatedetails = await Admin.findByIdAndUpdate(
-      req.user.id,
+      req.user,
       {
         $set: {
           username: req.body.username,
@@ -143,7 +144,7 @@ const logoutRouter = async (req, res, next) => {
   try {
     console.log("hiii");
 
-    res.clearCookie("access_token");
+    
     res.status(200).json("logout successfully");
   } catch (error) {
     next(error);
@@ -162,7 +163,7 @@ const reset_password = async (req, res, next) => {
     user.resetToken = resetToken;
     await user.save();
 
-    const resetLink = `https://gilded-medovik-7ebb95.netlify.app/reset-password/${user._id}/${resetToken}`;
+    const resetLink = `http://localhost:5173/reset-password/${user._id}/${resetToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",
@@ -214,7 +215,7 @@ const verifyUser = async (req, res, next) => {
   const { id, token } = req.params;
 
   const user = await Admin.findById(id);
-  console.log("user", user);
+  
   if (!user) {
     return next(errorHandler(404, "User not found"));
   }
@@ -228,7 +229,7 @@ const verificationstatus = async (req, res, next) => {
   const { id, token } = req.params;
 
   const user = await Admin.findById(id);
-  console.log("user status", user);
+ 
 
   if (!user) {
     return next(errorHandler(404, "User not found"));

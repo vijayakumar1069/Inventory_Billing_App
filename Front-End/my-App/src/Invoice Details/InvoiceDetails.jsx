@@ -28,9 +28,13 @@ export default function InvoiceDetails() {
 
       // Update the URL with the new parameters
       window.history.replaceState({}, "", `?${params.toString()}`);
+      const t=localStorage.getItem("access_token");
 
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`
+        `/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`,{
+          headers: {'Content-Type': 'application/json',
+          Authorization: `Bearer ${t}`}
+        }
       );
 
       const data = await res.json();
@@ -61,9 +65,13 @@ export default function InvoiceDetails() {
 
     // Update the URL with the new parameters
     window.history.replaceState({}, "", `?${params.toString()}`);
+    const t=localStorage.getItem("access_token");
 
     const res = await fetch(
-      `https://inventory-app-01.onrender.com/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`
+      `/api/invoices/getallInvoices/${currentUser._id}?${params.toString()}`,{
+        headers: {'Content-Type': 'application/json',
+        Authorization: `Bearer ${t}`,},
+      }
     );
 
     const data = await res.json();
@@ -78,10 +86,14 @@ export default function InvoiceDetails() {
 
   const handledelete = async (deleteid) => {
     try {
+      const t =localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/deleteinvoice?deleteid=${deleteid}`,
+        `/api/invoices/deleteinvoice?deleteid=${deleteid}`,
         {
           method: "DELETE",
+          headers:{
+            Authorization: `Bearer ${t}`,
+          }
         }
       );
       const data = await res.json();

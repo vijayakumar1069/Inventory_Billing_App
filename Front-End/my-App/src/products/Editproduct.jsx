@@ -13,16 +13,23 @@ export default function EditProduct() {
   const navigate = useNavigate();
   const params = useParams();
 
-
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/editproduct/${params.id}`);
+      const t = localStorage.getItem("access_token");
+      const res = await fetch(
+        `https://inventory-app-01.onrender.com/api/products/editproduct/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${t}`,
+          },
+        }
+      );
       const data = await res.json();
       setFormdata(data);
     };
     fetching();
   }, [params.id]);
-  console.log(formdata)
+  console.log(formdata);
 
   const handlechange = (e) => {
     setFormdata({
@@ -34,11 +41,18 @@ export default function EditProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/editproductdone/${params.id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formdata),
-      });
+      const t = localStorage.getItem("access_token");
+      const res = await fetch(
+        `https://inventory-app-01.onrender.com/api/products/editproductdone/${params.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${t}`,
+          },
+          body: JSON.stringify(formdata),
+        }
+      );
 
       if (!res.ok) {
         const data = await res.json();
@@ -70,7 +84,7 @@ export default function EditProduct() {
             placeholder="Product ID"
             id="productID"
             className="p-3 border rounded-lg focus:outline-none"
-             inputMode="numeric"
+            inputMode="numeric"
             onChange={handlechange}
             value={formdata.productID}
           />

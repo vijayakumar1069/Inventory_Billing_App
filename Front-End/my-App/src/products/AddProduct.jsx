@@ -12,14 +12,22 @@ export default function AddProduct() {
     productcategory: "",
     productquantity: null,
     productprice: null,
-    initailquantity:null
+    initailquantity: null,
   });
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetching = async () => {
       try {
-        const res = await fetch(`https://inventory-app-01.onrender.com/api/products/getproducts/${currentUser._id}`);
+        const t = localStorage.getItem("access_token");
+        const res = await fetch(
+          `/api/products/getproducts/${currentUser._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${t}`,
+            },
+          }
+        );
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);
@@ -44,10 +52,12 @@ export default function AddProduct() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/addproduct/${currentUser._id}`, {
+      const t = localStorage.getItem("access_token");
+      const res = await fetch(`/api/products/addproduct/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${t}`,
         },
         body: JSON.stringify(formdata),
       });
@@ -75,7 +85,7 @@ export default function AddProduct() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/deleteproduct/${id}`, {
+      const res = await fetch(`/api/products/deleteproduct/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -92,7 +102,7 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="mx-5 my-5 p-3 flex-shrink-0 flex flex-col items-center bg-white shadow-lg rounded-md">
+      <div className=" my-5 p-3 flex-shrink-0 flex flex-col items-center bg-white shadow-lg rounded-md">
         <h1 className="text-3xl font-bold text-gray-800 mb-5">
           Add Your Products
         </h1>

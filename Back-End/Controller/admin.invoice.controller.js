@@ -5,7 +5,7 @@ const { format, parseISO } = require("date-fns");
 const errorHandler = require("../Utils/errorHandler.js");
 const PRODUCT = require("../Models/admin.products.js");
 const CUSTOMER = require("../Models/admin.customer.js");
-const Admin=require("../Models/admin.model.js")
+const Admin = require("../Models/admin.model.js");
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -57,7 +57,7 @@ const createInvoice = async (req, res, next) => {
       addProductsToCustomer.previouslyOrderedProducts.push(product._id);
     }
     const adminemail = await Admin.findById(req.params.id);
-    console.log(adminemail)
+    console.log(adminemail);
 
     for (const product of req.body.prevProducts) {
       const quantityCheck = await PRODUCT.findOne({ _id: product._id });
@@ -131,6 +131,9 @@ const createInvoice = async (req, res, next) => {
 const getallInvoices = async (req, res, next) => {
   try {
     console.log(req.params.id);
+    if (req.user != req.params.id) {
+      return next(errorHandler(404, "unauthorized"));
+    }
     // Extract filtering parameters from the request query
     const { invoiceNumber, issuedate, dueDate, status } = req.query;
 
@@ -206,7 +209,6 @@ const addproductstoexistinginvoice = async (req, res, next) => {
   res.status(200).json(currentInvoice);
 };
 const updateexistinginvoice = async (req, res, next) => {
-  console.log(req.body.formdata);
   try {
     const invoice = await INVOICE.findOne({ _id: req.params.id });
 
@@ -220,8 +222,10 @@ const updateexistinginvoice = async (req, res, next) => {
     if (!updateproductsincustomer) {
       return next(errorHandler(404, "Customer not found"));
     }
+    if (req.body.formdata != "") {
+      invoice.status = req.body.formdata;
+    }
 
-    invoice.status = req.body.formdata;
     await invoice.save();
 
     // Respond with the updated invoice

@@ -18,27 +18,27 @@ export default function Login() {
       [e.target.id]: e.target.value,
     });
   };
+ 
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        "https://inventory-app-01.onrender.com/api/admin/login",
-        {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-          },
-          body: JSON.stringify(formdata),
-        }
-      );
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+         
+        },
+        body: JSON.stringify(formdata),
+      });
       const data = await res.json();
-      
+
       if (data.success === false) {
         console.log(data.message);
         return setError(data.message);
       }
-      dispatch(loginstart(data));
+      dispatch(loginstart(data.rest));
       const token1 = data.token;
+      
       localStorage.setItem("access_token", token1);
 
       setError(false);

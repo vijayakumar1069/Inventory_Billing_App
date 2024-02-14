@@ -8,7 +8,9 @@ const INVOICE = require("../Models/admin.invoice.model.js");
 const addCustomer = async (req, res, next) => {
   try {
     const { customerID, name, email, address } = req.body;
-    console.log(req.params.id);
+    if (req.params.id != req.user) {
+      return next(errorHandler(404, "your not Authorized"));
+    }
 
     const customer = await CUSTOMER.findOne({
       customerID,
@@ -36,10 +38,10 @@ const addCustomer = async (req, res, next) => {
 };
 const getallcustomer = async (req, res, next) => {
   try {
-    if (req.params.id != req.user.id) {
+    if (req.params.id != req.user) {
       return next(errorHandler(404, "your not Authorized"));
     }
-    const customerDetails = await CUSTOMER.find({ admin: req.user.id }).sort({
+    const customerDetails = await CUSTOMER.find({ admin: req.user }).sort({
       createdAt: -1,
     });
     res.status(200).json(customerDetails);
@@ -60,7 +62,7 @@ const editcustomer = async (req, res, next) => {
 };
 const updatecustomer = async (req, res, next) => {
   try {
-    console.log(req.params.id);
+   
     const customer = await CUSTOMER.findByIdAndUpdate(
       req.params.id,
       {
@@ -73,7 +75,7 @@ const updatecustomer = async (req, res, next) => {
       },
       { new: true }
     );
-    console.log(customer);
+    
     res.status(200).json(customer);
   } catch (error) {
     next(error);

@@ -17,8 +17,14 @@ export default function Customer() {
   const [customer, setCustomer] = useState([]);
   useEffect(() => {
     const fetching = async () => {
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/getallcustomer/${currentUser._id}`
+        `/api/customers/getallcustomer/${currentUser._id}`,
+        {
+          headers:{
+            Authorization: `Bearer ${t}`,
+          }
+        }
       );
       const data = await res.json();
       if (data.success === false) {
@@ -29,7 +35,7 @@ export default function Customer() {
     };
     fetching();
   }, [currentUser._id]);
-  console.log(customer);
+ 
 
   const handlechange = (e) => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
@@ -38,11 +44,14 @@ export default function Customer() {
     e.preventDefault();
     try {
       setLoading(true);
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/addcustomer/${currentUser._id}  `,
+        `/api/customers/addcustomer/${currentUser._id}  `,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${t}`,
+         },
           body: JSON.stringify(formdata),
         }
       );
@@ -65,8 +74,10 @@ export default function Customer() {
   };
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/deletecustomer/${id}`, {
+      const t=localStorage.getItem("access_token");
+      const res = await fetch(`/api/customers/deletecustomer/${id}`, {
         method: "DELETE",
+        Authorization: `Bearer ${t}`,
       });
       const data = await res.json();
       setCustomer(customer.filter((cus) => cus._id !== id));

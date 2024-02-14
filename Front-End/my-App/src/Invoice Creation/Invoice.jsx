@@ -32,8 +32,13 @@ export default function Invoice() {
 
   const handlesearchProductID = async () => {
     try {
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`
+        `/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
+          headers:{
+            Authorization: `Bearer ${t}`,
+          }
+        }
       );
       const data = await res.json();
       if (data.success === false) {
@@ -61,8 +66,13 @@ export default function Invoice() {
 
   const handlesearchCustomerID = async () => {
     try {
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/customers/getcustomer/${currentCustomer.customerID}/${currentUser._id}`
+        `/api/customers/getcustomer/${currentCustomer.customerID}/${currentUser._id}`,{
+          headers:{
+            Authorization: `Bearer ${t}`,
+          }
+        }
       );
       const data = await res.json();
       if (data.success === false) {
@@ -143,12 +153,14 @@ export default function Invoice() {
         currentCustomer,
         date,
       });
+      const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/createInvoice/${currentUser._id}`,
+        `/api/invoices/createInvoice/${currentUser._id}`,
         {
           method: "POST",
           headers: {
             "content-Type": "application/json",
+            Authorization: `Bearer ${t}`,
           },
           body: dataforserverside,
         }

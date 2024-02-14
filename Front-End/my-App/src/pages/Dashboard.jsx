@@ -16,11 +16,20 @@ export default function Dashboard() {
   useEffect(() => {
     const fetching = async () => {
       try {
+        const t = localStorage.getItem("access_token");
+        console.log(t);
         const res = await fetch(
-          `https://inventory-app-01.onrender.com/api/dashboard/getdashboarddetails/${currentUser._id}`
+          `/api/dashboard/getdashboarddetails/${currentUser._id}`,
+          {
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Bearer ${t}`,
+            },
+          }
         );
         const data = await res.json();
         console.log(data);
+        
         if (data.success === false) {
           console.log(data.message);
         }
@@ -92,7 +101,7 @@ export default function Dashboard() {
               Total Product Value
             </h3>
             <p className="text-xl font-semibold text-[#000000]">
-            $ {Math.round(details.costoftotalproduct)}
+              $ {Math.round(details.costoftotalproduct)}
             </p>
           </div>
         </div>
@@ -107,7 +116,7 @@ export default function Dashboard() {
               Total Sales
             </h3>
             <p className="text-xl font-semibold text-[#000000]">
-            $ {Math.round(details.totalsales)}
+              $ {Math.round(details.totalsales)}
             </p>
           </div>
         </div>
@@ -153,7 +162,9 @@ export default function Dashboard() {
       </div>
 
       <div className="my-5">
-        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">Top Selling Product</h1>
+        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">
+          Top Selling Product
+        </h1>
         {details.topProducts && details.topProducts.length > 0 ? (
           <div className="w-full md:w-2/3 mx-auto bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieChartData} />
@@ -166,7 +177,9 @@ export default function Dashboard() {
       </div>
 
       <div className="my-5">
-        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">Top Buying Customer</h1>
+        <h1 className="text-2xl font-bold mb-4 text-[#1E3A8A]">
+          Top Buying Customer
+        </h1>
         {details.topCustomers && details.topCustomers.length > 0 ? (
           <div className="w-full md:w-2/3 mx-auto bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
             <PieChart data={pieCustomerChartData} />
@@ -193,5 +206,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-

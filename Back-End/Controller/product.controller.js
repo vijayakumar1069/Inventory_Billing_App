@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    if (req.user.id != req.params.id) {
+    if (req.user != req.params.id) {
       return next(errorHandler(404, "your not authorized to add product"));
     }
 
@@ -33,7 +33,7 @@ const addProduct = async (req, res, next) => {
     });
     await newproduct.save();
 
-    const admin = await ADMIN.findById(req.user.id);
+    const admin = await ADMIN.findById(req.user);
 
     admin.products = admin.products || [];
 
@@ -47,12 +47,12 @@ const addProduct = async (req, res, next) => {
   }
 };
 const getProducts = async (req, res, next) => {
-  if (req.user.id != req.params.id) {
+  if (req.user != req.params.id) {
     return next(errorHandler(404, "You are not authorized"));
   }
 
   try {
-    const admin = await ADMIN.findById(req.user.id).populate({
+    const admin = await ADMIN.findById(req.user).populate({
       path: "products",
       options: { sort: { createdAt: -1 } }, // Sort products in descending order based on createdAt
     });
@@ -116,7 +116,7 @@ const editproductdone = async (req, res, next) => {
 };
 const deleteProduct = async (req, res, next) => {
   try {
-    const admin = await ADMIN.findById({ _id: req.user.id });
+    const admin = await ADMIN.findById({ _id: req.user });
     if (!admin) {
       return next(errorHandler(404, "you can only delete your products"));
     }

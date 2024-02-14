@@ -7,18 +7,20 @@ const { ObjectId } = require("mongoose").Types;
 
 const getdashboarddetails = async (req, res, next) => {
   try {
-    const product = await PRODUCT.find({ admin: req.params.id });
-   console.log(ObjectId.isValid(req.params.id))
+    console.log("req",req.user)
+    
+    const product = await PRODUCT.find({ admin: req.user });
+  
   
     const costoftotalproduct = product.reduce(
       (acc, pro) => acc + pro.productprice * pro.initailquantity,
       0
     );
 
-    const customer = await CUSTOMER.find({ admin: req.params.id });
+    const customer = await CUSTOMER.find({ admin: req.user });
     const totalcustomer = customer.length;
 
-    const invoices = await INVOICE.find({ admin: req.params.id });
+    const invoices = await INVOICE.find({ admin: req.user });
    
     const totalinvoicecost = invoices.reduce((acc, invoice) => {
       return (
