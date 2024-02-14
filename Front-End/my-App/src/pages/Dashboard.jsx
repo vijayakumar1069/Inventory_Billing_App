@@ -19,7 +19,7 @@ export default function Dashboard() {
         const t = localStorage.getItem("access_token");
         console.log(t);
         const res = await fetch(
-          `/api/dashboard/getdashboarddetails/${currentUser._id}`,
+          `https://inventory-app-01.onrender.com/api/dashboard/getdashboarddetails/${currentUser._id}`,
           {
             headers: {
               "content-type": "application/json",

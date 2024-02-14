@@ -34,7 +34,7 @@ export default function Invoice() {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
+        `https://inventory-app-01.onrender.com/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
           headers:{
             Authorization: `Bearer ${t}`,
           }
@@ -68,7 +68,7 @@ export default function Invoice() {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/customers/getcustomer/${currentCustomer.customerID}/${currentUser._id}`,{
+        `https://inventory-app-01.onrender.com/api/customers/getcustomer/${currentCustomer.customerID}/${currentUser._id}`,{
           headers:{
             Authorization: `Bearer ${t}`,
           }
@@ -155,7 +155,7 @@ export default function Invoice() {
       });
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/invoices/createInvoice/${currentUser._id}`,
+        `https://inventory-app-01.onrender.com/api/invoices/createInvoice/${currentUser._id}`,
         {
           method: "POST",
           headers: {

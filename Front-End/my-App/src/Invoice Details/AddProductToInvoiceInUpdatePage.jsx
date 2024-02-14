@@ -30,7 +30,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
+        `https://inventory-app-01.onrender.com/api/products/getproduct/${currentproduct.productID}/${currentUser._id}`,{
           headers:{
             Authorization: `Bearer ${t}`,
           }
@@ -98,7 +98,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
       try {
         const t=localStorage.getItem("access_token");
         const res = await fetch(
-          `/api/invoices/getproductsforexistinginvoice/${id}`,
+          `https://inventory-app-01.onrender.com/api/invoices/getproductsforexistinginvoice/${id}`,
           {
             headers:{
               Authorization: `Bearer ${t}`,
@@ -145,7 +145,7 @@ export const AddProductToInvoiceInUpdatePage = () => {
       setLoading(true);
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/invoices/addproductstoexistinginvoice/${id}`,
+        `https://inventory-app-01.onrender.com/api/invoices/addproductstoexistinginvoice/${id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json",

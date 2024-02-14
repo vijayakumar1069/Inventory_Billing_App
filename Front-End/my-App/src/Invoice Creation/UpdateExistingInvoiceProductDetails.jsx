@@ -24,7 +24,7 @@ export const UpdateExistingInvoiceProductDetails = () => {
       try {
         const t=localStorage.getItem("access_token");
         const res = await fetch(
-          `/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`,{
+          `https://inventory-app-01.onrender.com/api/invoices/updateproductquantityinexisitinginvoice/${id}?productid=${productid}`,{
             headers:{
               Authorization: `Bearer ${t}`,
             }
@@ -58,7 +58,7 @@ export const UpdateExistingInvoiceProductDetails = () => {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
+        `https://inventory-app-01.onrender.com/api/invoices/updateproductsdoneinexistinginvoice/${id}?productid=${productid}`,
         {
           method: "POST",
           headers: {

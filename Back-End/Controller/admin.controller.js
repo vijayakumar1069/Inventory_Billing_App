@@ -35,7 +35,7 @@ const signupRouter = async (req, res, next) => {
       verificationToken,
     });
     await addnewadmin.save();
-    const verificationLink = `http://localhost:5173/verify/${addnewadmin._id}/${verificationToken}`;
+    const verificationLink = `https://creative-medovik-389af4.netlify.app/verify/${addnewadmin._id}/${verificationToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",
@@ -88,7 +88,7 @@ const loginRouter = async (req, res, next) => {
     const token = jwt.sign({ id: findadminexists._id }, process.env.JWT_KEY);
     const { password: pass, ...rest } = findadminexists._doc;
     if (findadminexists.isVerified == false) {
-      const verificationLink = `http://localhost:5173/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
+      const verificationLink = `https://creative-medovik-389af4.netlify.app/verify/${findadminexists._id}/${findadminexists.verificationToken}`;
 
       const mailOptions = {
         from: "vijay.r20799@gmail.com",
@@ -163,7 +163,7 @@ const reset_password = async (req, res, next) => {
     user.resetToken = resetToken;
     await user.save();
 
-    const resetLink = `http://localhost:5173/reset-password/${user._id}/${resetToken}`;
+    const resetLink = `https://creative-medovik-389af4.netlify.app/reset-password/${user._id}/${resetToken}`;
 
     const mailOptions = {
       from: "vijay.r20799@gmail.com",

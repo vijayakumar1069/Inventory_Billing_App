@@ -19,7 +19,7 @@ export default function Editcustomer() {
   useEffect(() => {
     const fetching = async () => {
       const t=localStorage.getItem("access_token");
-      const res = await fetch(`/api/customers/editcustomer/${id}`,{
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/editcustomer/${id}`,{
         headers:{
           Authorization: `Bearer ${t}`,
         }
@@ -42,7 +42,7 @@ export default function Editcustomer() {
     e.preventDefault();
     try {
       const t=localStorage.getItem("access_token");
-      const res = await fetch(`/api/customers/updatecustomer/${id}`, {
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/updatecustomer/${id}`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
