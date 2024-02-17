@@ -21,7 +21,7 @@ export default function AddProduct() {
       try {
         const t = localStorage.getItem("access_token");
         const res = await fetch(
-          `/api/products/getproducts/${currentUser._id}`,
+          `https://inventory-app-01.onrender.com/api/products/getproducts/${currentUser._id}`,
           {
             headers: {
               Authorization: `Bearer ${t}`,
@@ -53,7 +53,7 @@ export default function AddProduct() {
     e.preventDefault();
     try {
       const t = localStorage.getItem("access_token");
-      const res = await fetch(`/api/products/addproduct/${currentUser._id}`, {
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/addproduct/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function AddProduct() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/products/deleteproduct/${id}`, {
+      const res = await fetch(`https://inventory-app-01.onrender.com/api/products/deleteproduct/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
