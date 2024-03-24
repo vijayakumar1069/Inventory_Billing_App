@@ -44,7 +44,7 @@ export const UpdateInvoice = () => {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/updateexistinginvoice/${paramsid}`,
+        `http://localhost:3000/api/invoices/updateexistinginvoice/${paramsid}`,
         {
           method: "POST",
           headers: {
@@ -80,7 +80,7 @@ export const UpdateInvoice = () => {
     try {
       const t=localStorage.getItem("access_token");
       const res = await fetch(
-        `https://inventory-app-01.onrender.com/api/invoices/deleteproductfrominvoice/${paramsid}?delete_id=${delete_id}`,
+        `http://localhost:3000/api/invoices/deleteproductfrominvoice/${paramsid}?delete_id=${delete_id}`,
         {
           method: "DELETE",
           headers:{
@@ -106,7 +106,7 @@ export const UpdateInvoice = () => {
     const fetching = async () => {
       try {
         const t=localStorage.getItem("access_token");
-        const res = await fetch(`https://inventory-app-01.onrender.com/api/invoices/updateinvoice/${paramsid}`,{
+        const res = await fetch(`http://localhost:3000/api/invoices/updateinvoice/${paramsid}`,{
           headers:{
             Authorization: `Bearer ${t}`,
           }

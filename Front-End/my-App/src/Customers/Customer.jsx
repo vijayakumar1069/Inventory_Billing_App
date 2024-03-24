@@ -75,7 +75,7 @@ export default function Customer() {
   const handleDelete = async (id) => {
     try {
       const t=localStorage.getItem("access_token");
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/customers/deletecustomer/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/customers/deletecustomer/${id}`, {
         method: "DELETE",
         Authorization: `Bearer ${t}`,
       });

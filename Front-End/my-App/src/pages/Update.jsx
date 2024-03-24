@@ -54,7 +54,7 @@ export default function Update() {
     try {
       const t = localStorage.getItem("access_token");
       console.log("delete finished");
-      const res = await fetch(`https://inventory-app-01.onrender.com/api/admin/logout`, {
+      const res = await fetch(`http://localhost:3000/api/admin/logout`, {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${t}`,
